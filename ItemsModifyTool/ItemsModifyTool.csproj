@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{77450C47-F09D-4530-A46F-0C063E83D451}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ItemsModifyTool</RootNamespace>
+    <AssemblyName>ItemsModifyTool</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\core\0Harmony.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\Assembly-CSharp.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\core\BepInEx.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="CommonAPI">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\CommonAPI-CommonAPI\CommonAPI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ConfigurationManager">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\配置管理器\ConfigurationManager.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="LDBTool">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\xiaoye97-LDBTool\LDBTool.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="netstandard">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\netstandard.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="UnityEngine">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ItemPowerCore.cs" />
+    <Compile Include="ItemsModifyToolPlugin.cs" />
+    <Compile Include="ItemPenroseBall.cs" />
+    <Compile Include="ItemsProto.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>mkdir "F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod"
+del /q "F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod\$(TargetFileName)"
+copy "$(TargetPath)" "F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod\$(TargetFileName)"
+mkdir "F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)"
+del /q "F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetPath)" "F:\Game\SteamGames\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

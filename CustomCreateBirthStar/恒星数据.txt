@@ -1,0 +1,31 @@
+﻿
+恒星数据
+
+public GalaxyData galaxy;
+  public string name = "";
+  public float mass = 1f;
+  public float lifetime = 50f;
+  public float age;
+  public EStarType type;
+  public float temperature = 8500f;
+  public ESpectrType spectr;
+  public float classFactor; //类别 因子
+  public float color;
+  public float luminosity = 1f; //光度
+  public float radius = 1f;
+  public float acdiskRadius;//??
+  public float habitableRadius = 1f;//可居住半径
+  public float lightBalanceRadius = 1f;//光平衡半径
+  public float dysonRadius = 10f;//戴森半径
+  public float orbitScaler = 1f;//轨道缩放器
+  public float asterBelt1OrbitIndex; //小行星带轨道索引
+  public float asterBelt2OrbitIndex;//小行星带轨道索引
+  public float asterBelt1Radius;
+  public float asterBelt2Radius;
+  public int planetCount;//星球数
+  public float level;
+  public float resourceCoef = 1f;
+  public PlanetData[] planets;
+  public const double kEnterDistance = 3600000.0;
+  public const float kPhysicsRadiusRatio = 1200f;
+  public const float kViewRadiusRatio = 800f;
