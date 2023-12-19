@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Reflection.Emit;
 using UnityEngine;
 using UnityEngine.Events;
@@ -50,8 +51,8 @@ namespace CustomCreateBirthStar
             //超大黑洞
             if (id == STAR_ID_BigHole)
             {
-                Util.Log("------------------------------------------------------");
-                Util.Log("设置超重黑洞: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
+                //Util.Log("------------------------------------------------------");
+                //Util.Log("设置超重黑洞: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
                 //DotNet35Random dotNet35Random = new DotNet35Random(galaxy.seed);
                 //double Rand = (float)dotNet35Random.NextDouble();
                 double Rand = 1;
@@ -65,8 +66,8 @@ namespace CustomCreateBirthStar
             //生成特殊颜色的巨星
             else if (id == STAR_ID_Custom1)
             {
-                Util.Log("------------------------------------------------------");
-                Util.Log("设置白巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
+                //Util.Log("------------------------------------------------------");
+                //Util.Log("设置白巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
                 needtype = EStarType.GiantStar;
                 needSpectr = ESpectrType.A;
                 pos.x = BigHoleVector.x - 2.5;
@@ -75,8 +76,8 @@ namespace CustomCreateBirthStar
             }
             else if (id == STAR_ID_Custom2)
             {
-                Util.Log("------------------------------------------------------");
-                Util.Log("设置黄巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
+                //Util.Log("------------------------------------------------------");
+                //Util.Log("设置黄巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
                 needtype = EStarType.GiantStar;
                 needSpectr = ESpectrType.G;
                 pos.x = BigHoleVector.x + 2.5;
@@ -85,8 +86,8 @@ namespace CustomCreateBirthStar
             }
             else if (id == STAR_ID_Custom3)
             {
-                Util.Log("------------------------------------------------------");
-                Util.Log("设置蓝巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
+                //Util.Log("------------------------------------------------------");
+                //Util.Log("设置蓝巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
                 needtype = EStarType.GiantStar;
                 needSpectr = ESpectrType.O;
                 pos.x = BigHoleVector.x - 2.5;
@@ -95,8 +96,8 @@ namespace CustomCreateBirthStar
             }
             else if (id == STAR_ID_Custom4)
             {
-                Util.Log("------------------------------------------------------");
-                Util.Log("设置红巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
+                //Util.Log("------------------------------------------------------");
+                //Util.Log("设置红巨星: id = " + id.ToString() + " starCount = " + galaxy.starCount.ToString());
                 needtype = EStarType.GiantStar;
                 needSpectr = ESpectrType.M;
                 pos.x = BigHoleVector.x + 2.5;
@@ -116,7 +117,7 @@ namespace CustomCreateBirthStar
             double Rand = 1;
             if (id == STAR_ID_Custom1)
             {
-                Util.Log("创建白巨星: id = " + id.ToString());
+                //Util.Log("创建白巨星: id = " + id.ToString());
                 __result.mass = 4.280622f + (float)(Rand * 0.5);
                 __result.lifetime = 194.1946f + (float)(Rand * 20);
                 __result.age = 0.9697264f + (float)(Rand * 0.08);
@@ -134,10 +135,12 @@ namespace CustomCreateBirthStar
                 __result.level = 0.9919679f;
                 __result.resourceCoef = 6.654952f;
                 __result.name = "残破庇护所 B";
+                __result.safetyFactor = 0.09f;
+                Util.OutputStarData(__result);
             }
             else if (id == STAR_ID_Custom2)
             {
-                Util.Log("创建黄巨星: id = " + id.ToString());
+                //Util.Log("创建黄巨星: id = " + id.ToString());
                 __result.mass = 0.9786646f + (float)(Rand * 0.5);
                 __result.lifetime = 3705.706f + (float)(Rand * 20);
                 __result.age = 0.9654025f + (float)(Rand * 0.08);
@@ -155,24 +158,37 @@ namespace CustomCreateBirthStar
                 __result.level = 0.9919679f;
                 __result.resourceCoef = 4.148485f;
                 __result.name = "残破庇护所 A";
+                __result.safetyFactor = 0.89f;
+                Util.OutputStarData(__result);
+
             }
             else if (id == STAR_ID_Custom3)
             {
-                Util.Log("创建蓝巨星: id = " + id.ToString());
+                //Util.Log("创建蓝巨星: id = " + id.ToString());
                 __result.spectr = ESpectrType.O;
                 __result.luminosity = 28.656674f + (float)(Rand * 0.3);//修改恒星光度
                 __result.name = "残破工业区";
+                __result.safetyFactor = 0.80f;
+                Util.OutputStarData(__result);
             }
             else if (id == STAR_ID_Custom4)
             {
-                Util.Log("创建红巨星: id = " + id.ToString());
+                //Util.Log("创建红巨星: id = " + id.ToString());
                 __result.spectr = ESpectrType.M;
                 __result.name = "古战场";
+                __result.safetyFactor = 0.001f;
+                __result.resourceCoef = 20.0f;
+                // 战斗相关
+                __result.safetyFactor = 0.001f;
+                __result.initialHiveCount = 4;
+                __result.hivePatternLevel = 2;
+                __result.maxHiveCount = 8;
+                Util.OutputStarData(__result);
             }
             else if (id == STAR_ID_BigHole)
             {
-                Util.Log("创建超重黑洞: id = " + id.ToString());
-                __result.mass = 5900.57f + (float)(Rand * 100);
+                //Util.Log("创建超重黑洞: id = " + id.ToString());
+                __result.mass = 300.57f + (float)(Rand * 100);
                 __result.lifetime = 0.001710792f + 1000 + (float)(Rand * 200);
                 __result.age = 1.122148f + 1000 + (float)(Rand * 100);
                 __result.type = EStarType.BlackHole;
@@ -188,11 +204,20 @@ namespace CustomCreateBirthStar
                 __result.dysonRadius = 0.19309f * 0;
                 __result.orbitScaler = 3.321507f;
                 __result.level = 1f;
-                __result.resourceCoef = 28.848314f;//修改资源系数
+                __result.resourceCoef = 308.848314f; // 修改资源系数
                 __result.name = "墓地";
+                // 战斗相关
+                __result.safetyFactor = 0.001f;
+                __result.initialHiveCount = 8;
+                __result.hivePatternLevel = 8;
+                __result.maxHiveCount = 8;
+                Util.OutputStarData(__result);
             }
-            else {return;}
-            Util.OutputStarData(__result);
+            else {
+                return;
+            }
+            
+            //Util.OutputStarData(__result);
         }
 
         ///<summary>
@@ -203,31 +228,31 @@ namespace CustomCreateBirthStar
             if (!CustomCreateBirthStarPlugin.NewSuperMassBlackHole) { return true; }
             if (star.id == STAR_ID_BigHole)
             {
-                Util.Log("创建黑洞行星: id = " + star.id.ToString());
+                //Util.Log("创建黑洞行星: id = " + star.id.ToString());
                 CreateStarPlanets(ref ___pGas, ref galaxy, ref star, ref gameDesc);
                 return false;
             }
             else if(star.id == STAR_ID_Custom1)
             {
-                Util.Log("创建白巨星行星: id = " + star.id.ToString());
+                //Util.Log("创建白巨星行星: id = " + star.id.ToString());
                 CreateStarPlanets(ref ___pGas, ref galaxy, ref star, ref gameDesc);
                 return false;
             }
             else if(star.id == STAR_ID_Custom2)
             {
-                Util.Log("创建黄巨星行星: id = " + star.id.ToString());
+                //Util.Log("创建黄巨星行星: id = " + star.id.ToString());
                 CreateStarPlanets(ref ___pGas, ref galaxy, ref star, ref gameDesc);
                 return false;
             }
             else if(star.id == STAR_ID_Custom3)
             {
-                Util.Log("创建蓝巨星行星: id = " + star.id.ToString());
+                //Util.Log("创建蓝巨星行星: id = " + star.id.ToString());
                 CreateStarPlanets(ref ___pGas, ref galaxy, ref star, ref gameDesc);
                 return false;
             }
             else if(star.id == STAR_ID_Custom4)
             {
-                Util.Log("创建红巨星行星: id = " + star.id.ToString());
+                //Util.Log("创建红巨星行星: id = " + star.id.ToString());
                 CreateStarPlanets(ref ___pGas, ref galaxy, ref star, ref gameDesc);
                 return false;
             }
@@ -250,64 +275,37 @@ namespace CustomCreateBirthStar
             double num5 = dotNet35Random2.NextDouble();
             double num6 = dotNet35Random2.NextDouble() * 0.2 + 0.9;
             double num7 = dotNet35Random2.NextDouble() * 0.2 + 0.9;
+            DotNet35Random dotNet35Random3 = new DotNet35Random(dotNet35Random1.Next());
+
+            // 不知道是什么玩意
+            // StarGen.SetHiveOrbitsConditionsTrue();
+            AccessTools.Method(typeof(StarGen), "SetHiveOrbitsConditionsTrue").Invoke(null, new object[] { /* 传递方法所需的参数 */ });
+
             if (star.type == EStarType.BlackHole)
             {
+
                 int[] ThemeIds = { 7, 10, 20, 24 };
+                int[] ThemeIds_Gas = { 2, 3, 4, 5, 21 };
                 star.planetCount = 8;
                 star.planets = new PlanetData[star.planetCount];
-                //galaxy,star,行星主题数组，行星index（行星的编号），卫星(归属哪颗行星)，轨道index（占用第几轨道），卫星id（如果本身是卫星，则此参数固定为0），是否巨星
-                star.planets[0] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 0, 0, 3, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[1] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 1, 0, 4, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[2] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 2, 0, 5, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[3] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 3, 0, 6, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[4] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 4, 0, 7, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[5] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 5, 0, 10, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[6] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 6, 0, 12, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                star.planets[7] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 7, 0, 13, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-
+                //galaxy,  star, 行星主题数组， index：行星编号，orbitAround=绕谁转(0=恒星)，orbitIndex=轨道ID    ，number=卫星id（如果本身是卫星，则此参数固定为0），是否巨星
+                star.planets[0] = Util.CreatePlanet(galaxy, star, ThemeIds, 0, 0, 3, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[1] = Util.CreatePlanet(galaxy, star, ThemeIds, 1, 0, 4, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[2] = Util.CreatePlanet(galaxy, star, ThemeIds, 2, 0, 5, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[3] = Util.CreatePlanet(galaxy, star, ThemeIds, 3, 0, 6, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[4] = Util.CreatePlanet(galaxy, star, ThemeIds, 4, 0, 7, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[5] = Util.CreatePlanet(galaxy, star, ThemeIds, 5, 0, 10, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[6] = Util.CreatePlanet(galaxy, star, ThemeIds, 6, 0, 12, 1, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                star.planets[7] = Util.CreatePlanet(galaxy, star, ThemeIds_Gas, 7, 0, 13, 1, true, dotNet35Random2.Next(), dotNet35Random2.Next());
 
             }
             else if (star.type == EStarType.NeutronStar)
             {
-                star.planetCount = 1;
-                star.planets = new PlanetData[star.planetCount];
-                int info_seed = dotNet35Random2.Next();
-                int gen_seed = dotNet35Random2.Next();
-                star.planets[0] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 0, 0, 3, 1, false, info_seed, gen_seed);
+                
             }
             else if (star.type == EStarType.WhiteDwarf)
             {
-                if (num1 < 0.699999988079071)
-                {
-                    star.planetCount = 1;
-                    star.planets = new PlanetData[star.planetCount];
-                    int info_seed = dotNet35Random2.Next();
-                    int gen_seed = dotNet35Random2.Next();
-                    star.planets[0] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 0, 0, 3, 1, false, info_seed, gen_seed);
-                }
-                else
-                {
-                    star.planetCount = 2;
-                    star.planets = new PlanetData[star.planetCount];
-                    if (num2 < 0.300000011920929)
-                    {
-                        int info_seed1 = dotNet35Random2.Next();
-                        int gen_seed1 = dotNet35Random2.Next();
-                        star.planets[0] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 0, 0, 3, 1, false, info_seed1, gen_seed1);
-                        int info_seed2 = dotNet35Random2.Next();
-                        int gen_seed2 = dotNet35Random2.Next();
-                        star.planets[1] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 1, 0, 4, 2, false, info_seed2, gen_seed2);
-                    }
-                    else
-                    {
-                        int info_seed3 = dotNet35Random2.Next();
-                        int gen_seed3 = dotNet35Random2.Next();
-                        star.planets[0] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 0, 0, 4, 1, true, info_seed3, gen_seed3);
-                        int info_seed4 = dotNet35Random2.Next();
-                        int gen_seed4 = dotNet35Random2.Next();
-                        star.planets[1] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 1, 1, 1, 1, false, info_seed4, gen_seed4);
-                    }
-                }
+                
             }
             else if (star.type == EStarType.GiantStar)
             {
@@ -349,15 +347,26 @@ namespace CustomCreateBirthStar
                     int[] ThemeIds = { 2, 3, 4, 5, 21 };
                     star.planetCount = 8;
                     star.planets = new PlanetData[star.planetCount];
-                    //                                      galaxy,  star, 行星主题数组， 行星编号，绕谁转(0=恒星)，轨道ID    ，卫星id（如果本身是卫星，则此参数固定为0），是否巨星
-                    star.planets[0] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 0, 0, 1, 1, true, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[1] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 1, 1, 1, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[2] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 2, 1, 2, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[3] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 3, 1, 4, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[4] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 4, 1, 5, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[5] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 5, 0, 7, 6, true, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[6] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 6, 0, 8, 7, true, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[7] = PlanetGen.CreatePlanet(galaxy, star, ThemeIds, 7, 0, 6, 8, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    //                                      galaxy,  star, 行星主题数组， index：行星编号，orbitAround=绕谁转(0=恒星)，orbitIndex=轨道ID    ，number=卫星id（如果本身是卫星，则此参数固定为0），是否巨星
+                    star.planets[0] = Util.CreatePlanet(galaxy, star, ThemeIds, 0, 0, 1, 1, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[1] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 1, 1, 1, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[2] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 2, 1, 2, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[3] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 3, 1, 4, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[4] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 4, 1, 5, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    
+                    star.planets[5] = Util.CreatePlanet(galaxy, star, ThemeIds, 5, 0, 6, 6, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[6] = Util.CreatePlanet(galaxy, star, ThemeIds, 6, 0, 7, 7, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[7] = Util.CreatePlanet(galaxy, star, ThemeIds, 7, 0, 8, 8, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+
+                    //star.planets[8] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 8, 0, 9, 9, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    //star.planets[9] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 9, 0, 10, 10, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                   // star.planets[10] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 10, 0, 11, 11, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                   // star.planets[11] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 11, 0, 12, 12, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                   // star.planets[12] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 12, 0, 13, 13, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+
+
+
+
 
                 }
                 else if(star.id == STAR_ID_Custom4)
@@ -380,6 +389,8 @@ namespace CustomCreateBirthStar
                     LDB.themes.Select(9).PlanetType = EPlanetType.Vocano;
                 }
             }
+
+            // 尾巴
             else
             {
                 Array.Clear((Array)___pGas, 0, ___pGas.Length);
@@ -555,48 +566,110 @@ namespace CustomCreateBirthStar
                     }
                 }
             }
-            int num16 = 0;
-            int num17 = 0;
-            int index1 = 0;
-            for (int index2 = 0; index2 < star.planetCount; ++index2)
             {
-                if (star.planets[index2].type == EPlanetType.Gas)
+                int num16 = 0;
+                int num17 = 0;
+                int index1 = 0;
+                for (int index2 = 0; index2 < star.planetCount; ++index2)
                 {
-                    num16 = star.planets[index2].orbitIndex;
-                    break;
-                }
-            }
-            for (int index3 = 0; index3 < star.planetCount; ++index3)
-            {
-                if (star.planets[index3].orbitAround == 0)
-                    num17 = star.planets[index3].orbitIndex;
-            }
-            if (num16 > 0)
-            {
-                int num18 = num16 - 1;
-                bool flag = true;
-                for (int index4 = 0; index4 < star.planetCount; ++index4)
-                {
-                    if (star.planets[index4].orbitAround == 0 && star.planets[index4].orbitIndex == num16 - 1)
+                    if (star.planets[index2].type == EPlanetType.Gas)
                     {
-                        flag = false;
+                        num16 = star.planets[index2].orbitIndex;
                         break;
                     }
                 }
-                if (flag && num4 < 0.2 + (double)num18 * 0.2)
-                    index1 = num18;
+                for (int index3 = 0; index3 < star.planetCount; ++index3)
+                {
+                    if (star.planets[index3].orbitAround == 0)
+                        num17 = star.planets[index3].orbitIndex;
+                }
+                if (num16 > 0)
+                {
+                    int num18 = num16 - 1;
+                    bool flag = true;
+                    for (int index4 = 0; index4 < star.planetCount; ++index4)
+                    {
+                        if (star.planets[index4].orbitAround == 0 && star.planets[index4].orbitIndex == num16 - 1)
+                        {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    if (flag && num4 < 0.2 + (double)num18 * 0.2)
+                        index1 = num18;
+                }
+                int index5 = num5 >= 0.2 ? (num5 >= 0.4 ? (num5 >= 0.8 ? 0 : num17 + 1) : num17 + 2) : num17 + 3;
+                if (index5 != 0 && index5 < 5)
+                    index5 = 5;
+                star.asterBelt1OrbitIndex = (float)index1;
+                star.asterBelt2OrbitIndex = (float)index5;
+                if (index1 > 0)
+                    star.asterBelt1Radius = StarGen.orbitRadius[index1] * (float)num6 * star.orbitScaler;
+                if (index5 > 0)
+                    star.asterBelt2Radius = StarGen.orbitRadius[index5] * (float)num7 * star.orbitScaler;
+                for (int index6 = 0; index6 < star.planetCount; ++index6)
+                {
+                    PlanetData planet = star.planets[index6];
+                    //StarGen.SetHiveOrbitConditionFalse(planet.orbitIndex, planet.orbitAroundPlanet != null ? planet.orbitAroundPlanet.orbitIndex : 0, planet.sunDistance / star.orbitScaler, star.index);
+                    AccessTools.Method(typeof(StarGen), "SetHiveOrbitConditionFalse").Invoke(null, new object[] { planet.orbitIndex, planet.orbitAroundPlanet != null ? planet.orbitAroundPlanet.orbitIndex : 0, planet.sunDistance / star.orbitScaler, star.index });
+
+                }
+                star.hiveAstroOrbits = new AstroOrbitData[8];
+                AstroOrbitData[] hiveAstroOrbits = star.hiveAstroOrbits;
+                int number = 0;
+                for (int index7 = 0; index7 < StarGen.hiveOrbitCondition.Length; ++index7)
+                {
+                    if (StarGen.hiveOrbitCondition[index7])
+                        ++number;
+                }
+                for (int index8 = 0; index8 < 8; ++index8)
+                {
+                    double num19 = dotNet35Random3.NextDouble() * 2.0 - 1.0;
+                    double num20 = dotNet35Random3.NextDouble();
+                    double num21 = dotNet35Random3.NextDouble();
+                    double num22 = (double)Math.Sign(num19) * Math.Pow(Math.Abs(num19), 0.7) * 90.0;
+                    double num23 = num20 * 360.0;
+                    double num24 = num21 * 360.0;
+                    float num25 = 0.3f;
+                    Assert.Positive(number);
+                    if (number > 0)
+                    {
+                        int num26 = star.index != 0 ? 5 : 2;
+                        int maxValue = (number > num26 ? num26 : number) * 100;
+                        int num27 = maxValue * 100;
+                        int num28 = dotNet35Random3.Next(maxValue);
+                        int num29 = num28 * num28 / num27;
+                        for (int index9 = 0; index9 < StarGen.hiveOrbitCondition.Length; ++index9)
+                        {
+                            if (StarGen.hiveOrbitCondition[index9])
+                            {
+                                if (num29 == 0)
+                                {
+                                    num25 = StarGen.hiveOrbitRadius[index9];
+                                    StarGen.hiveOrbitCondition[index9] = false;
+                                    --number;
+                                    break;
+                                }
+                                --num29;
+                            }
+                        }
+                    }
+                    hiveAstroOrbits[index8] = new AstroOrbitData();
+                    hiveAstroOrbits[index8].orbitRadius = num25 * star.orbitScaler;
+                    hiveAstroOrbits[index8].orbitInclination = (float)num22;
+                    hiveAstroOrbits[index8].orbitLongitude = (float)num23;
+                    hiveAstroOrbits[index8].orbitPhase = (float)num24;
+                    hiveAstroOrbits[index8].orbitalPeriod = Math.Sqrt(39.478417604357432 * (double)num25 * (double)num25 * (double)num25 / (1.3538551990520382E-06 * (double)star.mass));
+                    hiveAstroOrbits[index8].orbitRotation = Quaternion.AngleAxis(hiveAstroOrbits[index8].orbitLongitude, Vector3.up) * Quaternion.AngleAxis(hiveAstroOrbits[index8].orbitInclination, Vector3.forward);
+                    hiveAstroOrbits[index8].orbitNormal = Maths.QRotateLF(hiveAstroOrbits[index8].orbitRotation, new VectorLF3(0.0f, 1f, 0.0f)).normalized;
+                }
+
+
             }
-            int index5 = num5 >= 0.2 ? (num5 >= 0.4 ? (num5 >= 0.8 ? 0 : num17 + 1) : num17 + 2) : num17 + 3;
-            if (index5 != 0 && index5 < 5)
-                index5 = 5;
-            star.asterBelt1OrbitIndex = (float)index1;
-            star.asterBelt2OrbitIndex = (float)index5;
-            if (index1 > 0)
-                star.asterBelt1Radius = StarGen.orbitRadius[index1] * (float)num6 * star.orbitScaler;
-            if (index5 <= 0)
-                return;
-            star.asterBelt2Radius = StarGen.orbitRadius[index5] * (float)num7 * star.orbitScaler;
+            
         }
+
+        
 
         ///<summary>
         ///添加行星特质
@@ -614,13 +687,13 @@ namespace CustomCreateBirthStar
                 //6, 12, 17, 19, 20, 23
                 if (__result.windStrength >=1f)
                 {
-                    Util.Log("添加风速特质: id = " + star.id.ToString());
+                    //Util.Log("添加风速特质: id = " + star.id.ToString());
                     __result.windStrength *= 10;
                 }
 
                 if (__result.luminosity >=1f)
                 {
-                    Util.Log("添加光强特质: id = " + star.id.ToString());
+                    //Util.Log("添加光强特质: id = " + star.id.ToString());
                     __result.luminosity *= 10;
                 }
                 return;
@@ -651,6 +724,7 @@ namespace CustomCreateBirthStar
         {
             //检查全局功能开关
             if (!CustomCreateBirthStarPlugin.NewSuperMassBlackHole) { return; }
+            if (!CustomCreateBirthStarPlugin.Relics) { return; }
             //参数合法性校验
             if (__instance.vegePool[id].id == 0) { return; }
             //校验是否为指定离散矿石类型
@@ -661,34 +735,35 @@ namespace CustomCreateBirthStar
             int ItemCount = 0;
             DotNet35Random DotNet35Random = new DotNet35Random();
             double Random = DotNet35Random.NextDouble();
+
+
+            if(LDB.items.Select(ProtoID.物品.星际能量枢纽) == null)
+            {
+                return;
+            }
+
             //0.005概率获得星际电力枢纽
             if (Random > 0.00001 && Random <= 0.00501)
             {
-                ItemProtoID = ItemsProtoID.星际能量枢纽;
+                ItemProtoID = ProtoID.物品.星际能量枢纽;
                 ItemCount = 1;
             }
-            //0.005概率获得行星电网
-            else if (Random > 0.00501 && Random <= 0.00999)
-            {
-                ItemProtoID = ItemsProtoID.行星电网;
-                ItemCount = 1;
-            }
-            //0.002概率直接解锁蓝图
-            else if (Random > 0.0100 && Random <= 0.0120)
+            //0.001概率直接解锁蓝图
+            else if (Random > 0.0100 && Random <= 0.0110)
             {
                 if (__instance.planet.star.planets.Length > 0)
                 {
                     if(__instance.planet.star.planets[0].id == __instance.planet.id)
                     {
-                        if (__instance.gameData.history.TechUnlocked(ItemsProtoTechID.古代技术_星际电力传输) == false)
+                        if (__instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_星际电力传输) == false)
                         {
-                            __instance.gameData.history.UnlockTech(ItemsProtoTechID.古代技术_星际电力传输);
-                            Util.Log("解锁科技：" + LDB.techs.Select(ItemsProtoTechID.古代技术_星际电力传输).name);
+                            __instance.gameData.history.UnlockTech(ProtoID.Tech.古代技术_星际电力传输);
+                            //Util.Log("解锁科技：" + LDB.techs.Select(ProtoID.Tech.古代技术_星际电力传输).name);
                         }
-                        else if(__instance.gameData.history.TechUnlocked(ItemsProtoTechID.古代技术_行星级无线输电) == false)
+                        else if(__instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_行星级无线输电) == false)
                         {
-                            __instance.gameData.history.UnlockTech(ItemsProtoTechID.古代技术_行星级无线输电);
-                            Util.Log("解锁科技：" + LDB.techs.Select(ItemsProtoTechID.古代技术_行星级无线输电).name);
+                            __instance.gameData.history.UnlockTech(ProtoID.Tech.古代技术_行星级无线输电);
+                            //Util.Log("解锁科技：" + LDB.techs.Select(ProtoID.Tech.古代技术_行星级无线输电).name);
                         }
                         
                         
@@ -699,17 +774,17 @@ namespace CustomCreateBirthStar
             //0.01概率获得能量核心*10
             else if (Random > 0.201 && Random <= 0.211)
             {
-                ItemProtoID = ItemsProtoID.能量核心;
-                ItemCount = 10;
-            }//0.02概率获得能量核心*5
-            else if (Random > 0.211 && Random <= 0.231)
-            {
-                ItemProtoID = ItemsProtoID.能量核心;
+                ItemProtoID = ProtoID.物品.能量核心;
                 ItemCount = 5;
-            }//0.03概率获得能量核心*1
-            else if (Random > 0.231 && Random <= 0.261)
+            }//0.01概率获得能量核心*5
+            else if (Random > 0.211 && Random <= 0.221)
             {
-                ItemProtoID = ItemsProtoID.能量核心;
+                ItemProtoID = ProtoID.物品.能量核心;
+                ItemCount = 2;
+            }//0.01概率获得能量核心*1
+            else if (Random > 0.231 && Random <= 0.241)
+            {
+                ItemProtoID = ProtoID.物品.能量核心;
                 ItemCount = 1;
             }
             if (ItemProtoID < 1)
@@ -717,21 +792,33 @@ namespace CustomCreateBirthStar
                 //Util.Log("未获得道具，随机数：" + Random.ToString());
                 return;
             }
-            Util.Log("恒星ID：" + __instance.planet.star.id.ToString() + "  行星ID：" + __instance.planet.id.ToString() + "  对象ID：" + id.ToString() + "  对象类型：" + __instance.vegePool[id].protoId.ToString());
-            Util.Log("添加物品至背包：" + ItemProtoID.ToString());
-            int package = __instance.gameData.mainPlayer.TryAddItemToPackage(ItemProtoID, ItemCount, 0, true);
-            if (package > 0)
-            {
-                UIItemup.Up(ItemProtoID, package);
-            }
-            else
-            {
-                Util.Log("物品添加失败");
-            }
+            //Util.Log("恒星ID：" + __instance.planet.star.id.ToString() + "  行星ID：" + __instance.planet.id.ToString() + "  对象ID：" + id.ToString() + "  对象类型：" + __instance.vegePool[id].protoId.ToString());
+            
+            GainTechAwards(ItemProtoID, ItemCount);
+
         }
 
 
-
+        ///<summary>
+        ///添加物品奖励
+        ///</summary>
+        public static void GainTechAwards(int itemId, int count)
+        {
+            int package = GameMain.mainPlayer.TryAddItemToPackage(itemId, count, 0, true);
+            if (package < count)
+            {
+                UIRealtimeTip.Popup("无法获得科技奖励".Translate());
+                //Util.Log("物品添加失败");
+                Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "无法获得科技奖励");
+            }
+            else
+            {
+                UIItemup.Up(itemId, package);
+                //Util.Log("添加物品至背包：" + itemId.ToString());
+                Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "添加物品至背包");
+            }
+            
+        }
 
 
 

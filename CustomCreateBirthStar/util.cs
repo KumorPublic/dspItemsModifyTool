@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using Steamworks;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,8 @@ namespace CustomCreateBirthStar
     public static class Util
     {
         //StarGen复制过来的工具方法， 用来生成恒星数据
+        /*
+         * 
         public static StarData CreateStar(GalaxyData galaxy, VectorLF3 pos, int id, int seed, EStarType needtype, ESpectrType needSpectr = ESpectrType.X, int Mass = 1)
         {
             StarData starData = new StarData()
@@ -144,7 +147,27 @@ namespace CustomCreateBirthStar
             starData.overrideName = "";
             return starData;
         }
+        */
 
+
+        /// <summary>
+        /// 创建行星
+        /// </summary>
+        /// <param name="galaxy">银河系<para /></param>
+        /// <param name="star">恒星<para /></param>
+        /// <param name="行星主题数组">行星主题数组<para /></param>
+        /// <param name="index">行星ID，0 - planetCount<para /></param>
+        /// <param name="orbitAround">绕谁转(0 = 恒星)<para /></param>
+        /// <param name="orbitIndex">轨道ID，1 - 13<para /></param>
+        /// <param name="number">卫星ID（如果本身是卫星，则此参数固定为0）<para /></param>
+        /// <param name="gasGiant">是否为巨星<para /></param>
+        /// <param name="info_seed">种子1<para /></param>
+        /// <param name="gen_seed">种子2<para /></param>
+        /// <returns>PlanetData</returns>
+        public static PlanetData CreatePlanet(GalaxyData galaxy, StarData star, int[] 行星主题数组, int 行星ID, int 绕谁转, int 轨道ID, int 卫星ID, bool 是否为巨星, int info_seed, int gen_seed)
+        {
+            return PlanetGen.CreatePlanet(galaxy, star, 行星主题数组, 行星ID, 绕谁转, 轨道ID, 卫星ID, 是否为巨星, info_seed, gen_seed);
+        }
 
         private static float RandNormal(float averageValue, float standardDeviation, double r1, double r2)
         {
@@ -154,7 +177,15 @@ namespace CustomCreateBirthStar
         //输出恒星数据
         public static void OutputStarData(StarData Star)
         {
+            if (!CustomCreateBirthStarPlugin.Debug)
+            {
+                return;
+            }
+            CustomCreateBirthStarPlugin.logger.LogInfo("seed = " + Star.seed.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("index = " + Star.index.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("id = " + Star.id.ToString());
             CustomCreateBirthStarPlugin.logger.LogInfo("name(名称) = " + Star.name);
+            CustomCreateBirthStarPlugin.logger.LogInfo("overrideName(名称) = " + Star.overrideName);
             CustomCreateBirthStarPlugin.logger.LogInfo("mass(质量) = " + Star.mass.ToString());
             CustomCreateBirthStarPlugin.logger.LogInfo("lifetime(寿命) = " + Star.lifetime.ToString());
             CustomCreateBirthStarPlugin.logger.LogInfo("age(年龄) = " + Star.age.ToString());
@@ -186,13 +217,30 @@ namespace CustomCreateBirthStar
             CustomCreateBirthStarPlugin.logger.LogInfo("x = " + Star.position.x.ToString());
             CustomCreateBirthStarPlugin.logger.LogInfo("y = " + Star.position.y.ToString());
             CustomCreateBirthStarPlugin.logger.LogInfo("z = " + Star.position.z.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("ux = " + Star.uPosition.x.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("uy = " + Star.uPosition.y.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("uz = " + Star.uPosition.z.ToString());
 
-            CustomCreateBirthStarPlugin.logger.LogInfo("-----------------------------------------------------");
+            CustomCreateBirthStarPlugin.logger.LogInfo("---------------------战斗相关----------------------");
+            CustomCreateBirthStarPlugin.logger.LogInfo("initialHiveCount(巢穴数量) = " + Star.initialHiveCount.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("hivePatternLevel(巢穴等级) = " + Star.hivePatternLevel.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("safetyFactor(安全因数) = " + Star.safetyFactor.ToString());
+            CustomCreateBirthStarPlugin.logger.LogInfo("maxHiveCount(最大巢穴数量) = " + Star.maxHiveCount.ToString());
+
+
+
+        CustomCreateBirthStarPlugin.logger.LogInfo("-----------------------------------------------------");
         }
 
+        // 日志
         public static void Log(object data)
         {
             CustomCreateBirthStarPlugin.logger.LogInfo(data);
+        }
+
+        public static void Log(string className, string methodName, string data)
+        {
+            CustomCreateBirthStarPlugin.logger.LogInfo(className + ":" + methodName + ":" + data);
         }
 
         //导出主题数据

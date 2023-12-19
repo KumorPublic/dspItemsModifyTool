@@ -37,9 +37,9 @@ namespace CustomCreateBirthStar
         [HarmonyPatch(typeof(StarGen), "CreateStarPlanets")]
         public static bool CreateStarPlanetsPatch(ref double[] ___pGas, GalaxyData galaxy, ref StarData star, GameDesc gameDesc)
         {
-
+            
             if (!Stellar4Stars.CreatePlanet(ref ___pGas, ref galaxy, ref star, ref gameDesc)) { return false; }
-
+            
             if (!SuperMassBlackHole.CreatePlanet(ref ___pGas, ref galaxy, ref star, ref gameDesc)) { return false; }
 
             return true;
@@ -144,23 +144,6 @@ namespace CustomCreateBirthStar
         }
         **/
 
-        /* 修改字节码方式修改星球数量
-        [HarmonyTranspiler]
-        [HarmonyPatch(typeof(StarGen), "CreateStarPlanets")]
-        public static IEnumerable<CodeInstruction> StartSystemPlanetFix(
-        IEnumerable<CodeInstruction> instructions)
-        {
-            List<CodeInstruction> list = instructions.ToList<CodeInstruction>();
-            list[1021].opcode = OpCodes.Ldc_I4_S;
-            list[1021].operand = 9;
-
-            list[1025].opcode = OpCodes.Ldc_I4_S;
-            list[1025].operand = 10;
-
-            return ((IEnumerable<CodeInstruction>)list).AsEnumerable<CodeInstruction>();
-        }
-       **/
-
 
         //开采石头时拦截
         [HarmonyPrefix]
@@ -177,7 +160,7 @@ namespace CustomCreateBirthStar
         //    VegeProto vegeProto = LDB.veges.Select(protoId);
         //    Util.Log((object)(string.Format("Mined proto ID {0} (", (object)protoId) + vegeProto.Name.Translate() + ")"));
         //    Util.Log("恒星ID：" + __instance.gameData.localStar.id);
-        //    Util.Log("恒星ID：" + __instance.gameData.localPlanet.id);
+        //    Util.Log("恒星ID：" + __instance.gameData.localPlaneNewModel.ID);
         //   // __instance.gameData.player.TryAddItemToPackage(num4, num5, 0, true);
 
         //}

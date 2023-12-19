@@ -1,22 +1,142 @@
-﻿using HarmonyLib;
+﻿using CommonAPI.Systems.ModLocalization;
+using CommonAPI.Systems;
+using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using UnityEngine;
+using static System.Collections.Specialized.BitVector32;
+using System.Reflection;
+using System.IO;
 
-namespace ItemsManage
+namespace CustomCreateBirthStar
 {
     ///<summary>
     ///修改运输站可选重复槽位, 重写了原方法，游戏更新时需要注意
     ///</summary>
     class ItemStationSolt
     {
-        /*
-        //重写了原方法，游戏更新时需要注意
+        public static bool isUnlockTech = false;
+        private static TechProto NewTechProto;
+        
+        public static bool IsTechUnlocked()
+        {
+            return isUnlockTech;
+
+            /*
+             if (!isUnlockTech)
+            {
+                isUnlockTech = GameMain.history.TechUnlocked(ProtoID.Tech.黑雾科技_黑雾物流算法);
+            }
+            
+            return isUnlockTech;
+            */
+
+        }
+
+        // 初始化
+        public static void Create()
+        {
+            // 添加字符串
+            LocalizationModule.RegisterTranslation(ProtoID.String.科技_黑雾物流算法,
+                "Darkfog Technology - Darkfog Logistics Algorithm (Experimental)",
+                "黑雾科技 - 黑雾物流算法（实验性）",
+                "Darkfog Technology - Darkfog Logistics Algorithm (Experimental)"
+                );
+            LocalizationModule.RegisterTranslation(ProtoID.String.科技_黑雾物流算法_描述,
+                "By studying Darkfog behavior, we optimized the logistics drone group control algorithm. Logistics towers now allow multiple shipments of the same material to be sent and received at the same time. Warning: Since we have not yet fully understood the underlying logic of Darkfog’s large-scale group control, there may be bugs in logistics drones.",
+                "通过研究黑雾行为学，我们优化了物流无人机群控算法。现在，物流塔允许同时收发多个相同物料。警告：由于我们尚未彻底搞懂黑雾大规模群控的底层逻辑，物流无人机可能存在Bug。",
+                "By studying Darkfog behavior, we optimized the logistics drone group control algorithm. Logistics towers now allow multiple shipments of the same material to be sent and received at the same time. Warning: Since we have not yet fully understood the underlying logic of Darkfog’s large-scale group control, there may be bugs in logistics drones."
+                );
+            
+            // 添加科技
+            int id = ProtoID.Tech.黑雾科技_黑雾物流算法;
+            string name = ProtoID.String.科技_黑雾物流算法;
+            string description = ProtoID.String.科技_黑雾物流算法_描述;
+            string conclusion = ProtoID.String.科技_黑雾物流算法;
+            string iconPath = LDB.techs.Select(ProtoID.Tech.星际物流系统).IconPath;
+            int[] preTechs = LDB.techs.Select(1).PreTechs;
+            int[] costItems = new int[1] { ProtoID.物品.黑雾矩阵 };
+            
+            long costHash = 60000;
+            // value = costItem * costHash / 3600
+            int[] costItemsPoints = new int[1] { (int)(30000L * 3600L/costHash) };
+            
+            int[] unlockRecipes = new int[0] {  };
+            Vector2 position = LDB.techs.Select(1).Position;
+            position.y = position.y - 8;
+            NewTechProto = ProtoRegistry.RegisterTech(id, name, description, conclusion, iconPath, preTechs, costItems, costItemsPoints, costHash, unlockRecipes, position);
+            ProtoRegistry.onLoadingFinished += new Action(Finished);
+            
+
+        }
+
+        private static void Finished()
+        {
+            // 封杀使用元数据购买
+            IDCNT[] PropertyOverrideItemArray = new IDCNT[1];
+            PropertyOverrideItemArray[0].id = 6006;
+            PropertyOverrideItemArray[0].count = 500000000;
+
+            LDB.techs.Select(ProtoID.Tech.黑雾科技_黑雾物流算法).PropertyItemCounts = new int[1] { 500000000 };
+            LDB.techs.Select(ProtoID.Tech.黑雾科技_黑雾物流算法).PropertyOverrideItems = new int[1] { 6006 };
+            LDB.techs.Select(ProtoID.Tech.黑雾科技_黑雾物流算法).PropertyOverrideItemArray = PropertyOverrideItemArray;
+
+            Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "科技添加完成");
+
+        }
+
+        // 游戏初始化时读取科技解锁情况
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(GameHistoryData), "Import")]
+        public static void OnGameHistoryData_Import(GameHistoryData __instance, BinaryReader r)
+        {
+
+            isUnlockTech = GameMain.history.TechUnlocked(ProtoID.Tech.黑雾科技_黑雾物流算法);
+
+            Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name ,"科技：黑雾物流算法 " + (isUnlockTech ? "已解锁" : "未解锁"));
+
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(GameHistoryData), "SetForNewGame")]
+        public static void OnGameHistoryData_SetForNewGame (GameHistoryData __instance)
+        {
+
+            isUnlockTech = GameMain.history.TechUnlocked(ProtoID.Tech.黑雾科技_黑雾物流算法);
+
+            Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name ,"科技：黑雾物流算法 " + (isUnlockTech ? "已解锁" : "未解锁"));
+
+        }
+        // 监听科技解锁事件
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(GameHistoryData), "NotifyTechUnlock")]
+        public static void OnGameHistoryData_onTechUnlocked(GameHistoryData __instance, int _techId, int _level, bool _unlockedDirect)
+        {
+            if (_techId == ProtoID.Tech.黑雾科技_黑雾物流算法)
+            {
+                isUnlockTech = __instance.TechUnlocked(ProtoID.Tech.黑雾科技_黑雾物流算法);
+                Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "科技：黑雾物流算法 " + (isUnlockTech ? "已解锁" : "未解锁"));
+            }
+            
+        }
+
+        // 修改设置物流塔物品的方法，使它能够设置同种物品
+        // 重写了原方法，游戏更新时需要注意
         [HarmonyPrefix]
         [HarmonyPatch(typeof(UIStationStorage), "OnItemPickerReturn")]
         public static bool OnItemPickerReturn(UIStationStorage __instance, ItemProto itemProto)
         {
+            // 判断功能是否开启
+            if (!CustomCreateBirthStarPlugin.NanoTech)
+            {
+                return true;
+            }
+            // 判断科技是否解锁
+            if (IsTechUnlocked() == false)
+            {
+                return true;
+            }
             if (itemProto == null || __instance.station == null || __instance.index >= __instance.station.storage.Length)
                 return false;
             ItemProto itemProto1 = LDB.items.Select((int)__instance.stationWindow.factory.entityPool[__instance.station.entityId].protoId);
@@ -25,9 +145,9 @@ namespace ItemsManage
             int additionStorage = __instance.GetAdditionStorage();
             __instance.stationWindow.transport.SetStationStorage(__instance.station.id, __instance.index, itemProto.ID, itemProto1.prefabDesc.stationMaxItemCount + additionStorage, ELogisticStorage.Supply, __instance.station.isStellar ? ELogisticStorage.Supply : ELogisticStorage.None, GameMain.mainPlayer);
             return false;
-        }*/
-
-        //修改字节码方式
+        }
+          
+        /* 修改字节码方式
         [HarmonyTranspiler]
         [HarmonyPatch(typeof(UIStationStorage), "OnItemPickerReturn")]
         public static IEnumerable<CodeInstruction> UIStationStorageOnItemPickerReturn(
@@ -43,12 +163,25 @@ namespace ItemsManage
             return ((IEnumerable<CodeInstruction>)list).AsEnumerable<CodeInstruction>();
         }
 
+        */
 
+        // 物品达到
         [HarmonyPrefix]
         [HarmonyPatch(typeof(StationComponent), "AddItem")]
         [HarmonyPriority(Priority.First)]
         public static bool StationComponentAddItem(StationComponent __instance, ref int itemId, ref int count, ref int inc, ref int __result)
         {
+            // 判断功能是否开启
+            if (!CustomCreateBirthStarPlugin.NanoTech)
+            {
+                return true;
+            }
+            // 判断科技是否解锁
+            if (IsTechUnlocked() == false)
+            {
+                return true;
+            }
+
             __result = 0;
             if (itemId <= 0)
             {
@@ -102,17 +235,27 @@ namespace ItemsManage
             return false;
         }
 
-
+        // 物品取出
         //patch重载函数，匹配参数和参数类型
         [HarmonyPrefix]
         [HarmonyPatch(typeof(StationComponent), "TakeItem", new Type[] { typeof(int), typeof(int), typeof(int) }, new ArgumentType[] { ArgumentType.Ref, ArgumentType.Ref, ArgumentType.Out })]
         [HarmonyPriority(Priority.First)]
         public static bool StationComponentTakeItem2(StationComponent __instance, ref int itemId, ref int count, out int inc)
         {
+            inc = 0;
+            // 判断功能是否开启
+            if (!CustomCreateBirthStarPlugin.NanoTech)
+            {
+                return true;
+            }
+            // 判断科技是否解锁
+            if (IsTechUnlocked() == false)
+            {
+                return true;
+            }
             int indexHit = -1; //命中标记
             int indexMaxHit = -1; //命中标记
             int max = 0;//最大数量标记
-            inc = 0;
             if (itemId > 0 && count > 0)//合法性检测
             {
                 //ItemManagePlugin.logger.LogInfo("TakeItem2::" + itemId.ToString() + ",count = " + count.ToString() + ",inc = " + inc.ToString());

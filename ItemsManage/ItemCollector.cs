@@ -1,4 +1,5 @@
 ﻿using CommonAPI.Systems;
+using CommonAPI.Systems.ModLocalization;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -26,35 +27,44 @@ namespace ItemsManage
 
         public static void AddItem()
         {
-            ProtoRegistry.RegisterString("轨道开采站", "PlantCollector", "轨道开采站");
-            ProtoRegistry.RegisterString("轨道开采站描述", "Minerals that can mine entire planets", "可以开采整个行星的矿物");
-
-
-            oldItem = LDB.items.Select(ItemsProtoID.星际物流运输站);
-            oldRecipe = LDB.recipes.Select(ItemsProtoRecipeID.星际物流运输站);
+            // 添加字符串
+            LocalizationModule.RegisterTranslation("轨道开采站",
+                "PlantCollector",
+                "轨道开采站",
+                "PlantCollector"
+                );
+            LocalizationModule.RegisterTranslation("轨道开采站描述",
+                "Minerals that can mine entire planets",
+                "可以开采整个行星的矿物",
+                "Minerals that can mine entire planets"
+                );
+            
+            oldItem = LDB.items.Select(ProtoID.物品.星际物流运输站);
+            oldRecipe = LDB.recipes.Select(ProtoID.配方.星际物流运输站);
             oldModel = LDB.models.Select(oldItem.ModelIndex);
 
-            int ItemID = ItemsProto.ID_ITEM_Collector;
-            string IconPath = LDB.items.Select(ItemsProtoID.轨道采集器).IconPath;
-            int Grid = ItemsProto.INDEX_GRID_Collector;
+            // 注册原型
+            int ItemID = ProtoID.物品.轨道开采站;
+            string IconPath = LDB.items.Select(ProtoID.物品.轨道采集器).IconPath;
+            int Grid = ProtoID.GRID.轨道开采站;
             NewItem = ProtoRegistry.RegisterItem(ItemID, "轨道开采站", "轨道开采站描述", IconPath, Grid, 50, EItemType.Logistics);
 
-
-            int RecipeID = ItemsProto.ID_RECIPE_Collector;
+            // 注册配方
+            int RecipeID = ProtoID.配方.轨道开采站;
             ERecipeType RecipeType = oldRecipe.Type;
             int TimeSpend = 300 * myConst.Second;
-            int[] Input = new int[5] { ItemsProtoID.星际物流运输站, ItemsProtoID.能量核心满, ItemsProtoID.大型采矿机, ItemsProtoID.抽水站, ItemsProtoID.原油萃取站 };
+            int[] Input = new int[5] { ProtoID.物品.星际物流运输站, ProtoID.物品.能量核心满, ProtoID.物品.大型采矿机, ProtoID.物品.抽水站, ProtoID.物品.原油萃取站 };
             int[] InCount = new int[5] { 1, 1, 10, 20, 20 };
             int[] Output = new int[1] { NewItem.ID };
             int[] OutCount = new int[1] { 1 };
-            int preTech = ItemsProtoTechID.光子聚束采矿科技;
+            int preTech = ProtoID.Tech.光子聚束采矿科技;
             NewRecipe = ProtoRegistry.RegisterRecipe(RecipeID, RecipeType, TimeSpend, Input, InCount, Output, OutCount, "轨道开采站描述", preTech, Grid, "轨道开采站", IconPath);
 
-
-            int ModelID = ItemsProto.INDEX_Model_Collector;
+            // 注册模型
+            int ModelID = ProtoID.ModelID.轨道开采站;
             string PrefabPath = oldModel.PrefabPath;
             int[] descFieids = oldItem.DescFields;
-            int BuildID = ItemsProto.INDEX_BUILD_Collector;
+            int BuildID = ProtoID.BuildID.轨道开采站;
             NewModel = ProtoRegistry.RegisterModel(ModelID, NewItem, PrefabPath, null, descFieids, BuildID);
 
 
@@ -76,7 +86,10 @@ namespace ItemsManage
             //ItemManagePlugin.logger.LogInfo("maxAcuEnergy::" + NewModel.prefabDesc.stationMaxEnergyAcc.ToString());
             //ItemManagePlugin.logger.LogInfo("maxAcuEnergy::" + NewModel.prefabDesc.workEnergyPerTick.ToString());
             //ItemManagePlugin.logger.LogInfo("maxAcuEnergy::" + NewModel.prefabDesc.idleEnergyPerTick.ToString());
-
+            
+            NewModel.HpMax = 150000;
+            NewModel.HpRecover = 1000;
+            NewItem.HpMax = 150000;
         }
 
 
@@ -145,7 +158,7 @@ namespace ItemsManage
                     continue;
                 }
                 //匹配开采站的id
-                if (__instance.planet.factory.entityPool[stationComponent.entityId].protoId != ItemsProto.ID_ITEM_Collector)
+                if (__instance.planet.factory.entityPool[stationComponent.entityId].protoId != ProtoID.物品.轨道开采站)
                 {
                     continue;
                 }
@@ -173,13 +186,13 @@ namespace ItemsManage
                     //消耗燃料充电, 能量低，储量大于50，并且是原油或煤
                     if (stationComponent.energy < ItemConfig.CollectorCfg.MaxFuelEnergyAcc && Store.count > 50)
                     {
-                        if (Store.itemId == ItemsProtoID.原油)
+                        if (Store.itemId == ProtoID.物品.原油)
                         {
                             stationComponent.storage[StorageIndex].count -= 50;//减掉库存
                             stationComponent.energy += (long)(50 * 4050000 * 5); //4.05MJ
 
                         }
-                        else if (Store.itemId == ItemsProtoID.煤)
+                        else if (Store.itemId == ProtoID.物品.煤)
                         {
                             stationComponent.storage[StorageIndex].count -= 50;//减掉库存
                             stationComponent.energy += (long)(50 * 270000 * 5); //2.7MJ
@@ -308,7 +321,7 @@ namespace ItemsManage
             {
                 return;
             }
-            if (__instance.factory.entityPool[stationComponent.entityId].protoId != ItemsProto.ID_ITEM_Collector)
+            if (__instance.factory.entityPool[stationComponent.entityId].protoId != ProtoID.物品.轨道开采站)
             {
                 return;
             }
@@ -318,8 +331,8 @@ namespace ItemsManage
             //__instance.maxChargePowerValue.text = "效率:"+Multiplier.ToString() + "00%" ;
             //ItemManagePlugin.logger.LogInfo(__instance.maxChargePowerValue.text);
             //ItemManagePlugin.logger.LogInfo("效率: " + Multiplier.ToString() + "× 能耗: " + energyMultiplier.ToString() + "×" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000)).ToString() + "MJ×5");
-            stationComponent.name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
-            __instance.nameInput.text = stationComponent.name;
+            string name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
+            __instance.nameInput.text = name;
         }
 
         //计算挖矿倍率
@@ -356,15 +369,16 @@ namespace ItemsManage
             {
                 return;
             }
-            if (itemProto.ID != ItemsProto.ID_ITEM_Collector)
+            if (itemProto.ID != ProtoID.物品.轨道开采站)
             {
                 __instance.droneIconButton.gameObject.SetActive(true);
                 return;
             }
             int energyMultiplier = 0;
             int Multiplier = GetMultiplier(__instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
-            stationComponent.name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
-            __instance.nameInput.text = stationComponent.name;
+            string name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
+            //stationComponent.name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
+            __instance.nameInput.text = name;
 
             __instance.powerGroupRect.sizeDelta = new Vector2(540f, 40f);
 
@@ -411,7 +425,7 @@ namespace ItemsManage
                 return;
             }
             //如是轨道开采站，则隐藏翘曲器
-            if (itemProto.ID != ItemsProto.ID_ITEM_Collector)
+            if (itemProto.ID != ProtoID.物品.轨道开采站)
             {
                 return;
             }
