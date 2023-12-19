@@ -1,7 +1,7 @@
 # Mod_DysonSphereProgram
 
 戴森球计划mods
-用于个人学习
+
 
 # AutoBuild 自动建造模式（公开，前往[https://dsp.thunderstore.io/] 搜索下载）
  1. 放好蓝图后按Z键自动建造

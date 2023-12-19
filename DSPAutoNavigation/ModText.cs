@@ -28,13 +28,6 @@ public static class ModTranslate
 
     public static string ModText(this string text)
     {
-        if (Localization.language == Language.zhCN)
-        {
-            return text;
-        }
-        else
-        {
-            return enusDict[text];
-        }
+        return text;
     }
 }

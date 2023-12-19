@@ -81,14 +81,15 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>mkdir "$(MY_PATH)\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\kumor-Trash2Sand"
-del /q "$(MY_PATH)\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\kumor-Trash2Sand\$(TargetFileName)"
-copy "$(TargetPath)" "$(MY_PATH)\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\kumor-Trash2Sand\$(TargetFileName)"
-mkdir "$(MY_PATH)\r2modmanPlus-local\Mod\$(ProjectName)"
-del /q "$(MY_PATH)\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"
-copy "$(TargetPath)" "$(MY_PATH)\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"</PostBuildEvent>
+    <PostBuildEvent>mkdir "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod"
+del /q "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod\$(TargetFileName)"
+copy "$(TargetPath)" "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod\$(TargetFileName)"
+mkdir "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)"
+del /q "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"
+copy "$(TargetPath)" "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PreBuildEvent>setx MY_PATH "F:\Game\Steam\steamapps\common\Dyson Sphere Program"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
 </Project>

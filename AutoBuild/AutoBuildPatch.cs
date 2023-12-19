@@ -304,34 +304,6 @@ namespace AutoBuild
         }
 
 
-        //开启关闭建造无人机
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(MechaDroneLogic), "UpdateTargets")]
-        public static bool MechaDroneLogicUpdateTargets() => AutoBuildPlugin.droneEject.Value;
-
-        /**
-        if (AutoBuildPlugin.droneEject.Value)
-            {
-
-				AutoBuildPlugin.player.mecha.droneEjectEnergy = AutoBuildPlugin.droneEjectEnergy;
-
-			}
-            else
-            {
-
-				AutoBuildPlugin.player.mecha.droneEjectEnergy = AutoBuildPlugin.player.mecha.coreEnergyCap* 2;
-			}
-            **/
-
-
-
-
-
-
-
-
-
-
 
 
 

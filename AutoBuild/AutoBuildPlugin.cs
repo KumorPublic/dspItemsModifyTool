@@ -14,7 +14,7 @@ namespace AutoBuild
         public const string GUID = "kumor.plugin.AutoBuild";
         public const string NAME = "DSP_Kumor_AutoBuild";
         public const string VERSION = "1.0.4.0";
-        public const string GAME_VERSION = "0.9.27.15033";
+        public const string GAME_VERSION = "0.10.27.15033";
         public const string GAME_PROCESS = "DSPGAME.exe";
         public static ManualLogSource logger;
         public static Player player;
@@ -43,10 +43,7 @@ namespace AutoBuild
         ///充电站充电距离
         ///</summary>
         public static ConfigEntry<float> PowerChargerDt;
-        ///<summary>
-        ///开启关闭建造无人机
-        ///</summary>
-        public static ConfigEntry<bool> droneEject;
+
         ///<summary>
         ///开启关闭步行建造模式
         ///</summary>
@@ -62,7 +59,6 @@ namespace AutoBuild
             AutoBuildPlugin.AutoPowerCharger = this.Config.Bind<bool>("自动建造", "是否开启自动充电", true, new ConfigDescription("是否开启自动充电", (AcceptableValueBase)null, new object[0]));
             AutoBuildPlugin.PowerPer = this.Config.Bind<float>("自动建造", "充电下限百分比", 0.3f, new ConfigDescription("充电下限百分比", (AcceptableValueBase)new AcceptableValueRange<float>(0.1f, 0.99f), new object[0]));
             AutoBuildPlugin.PowerChargerDt = this.Config.Bind<float>("自动建造", "充电站充电距离", 5.5f, new ConfigDescription("充电站充电距离", (AcceptableValueBase)new AcceptableValueRange<float>(3f, 30f), new object[0]));
-            AutoBuildPlugin.droneEject = this.Config.Bind<bool>("自动建造", "建造无人机", true, new ConfigDescription("开启关闭建造无人机", (AcceptableValueBase)null, new object[0]));
             AutoBuildPlugin.WalkBuild = this.Config.Bind<bool>("自动建造", "步行建造模式", false, new ConfigDescription("开启关闭步行建造模式", (AcceptableValueBase)null, new object[0]));
 
         }
