@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
+using BepInEx.Logging;
+
 
 namespace AutoNavigate
 {
@@ -12,6 +14,8 @@ namespace AutoNavigate
     {
         public const string __NAME__ = "StellarAutoNavigation";
         public const string __GUID__ = "0x.plugins.dsp." + __NAME__;
+
+        public static ManualLogSource logger;
 
         static public AutoNavigate self;
         private Player player = null;
@@ -24,9 +28,11 @@ namespace AutoNavigate
         //public static double focusDistance;
         public static VectorLF3 focusDistance;
         public static long tipsCount;
-
+        
         void Start()
-        {         
+        {
+            AutoNavigate.logger = this.Logger;
+
             autoNav = new AutoStellarNavigation(GetNavConfig());
 
             self = this;
@@ -141,14 +147,16 @@ namespace AutoNavigate
 
                     if (autoNav.IsCurNavPlanet())
                     {
-                        //modeText.text = "星际自动导航".ModText();
-                        modeText.text = AutoNavigate.Tips().ModText();
+                        modeText.text = AutoNavigate.Tips();
                     }
                         
 
 
                     else if (autoNav.IsCurNavStar())
-                        modeText.text = AutoNavigate.Tips().ModText();
+                    {
+                        modeText.text = AutoNavigate.Tips();
+                    }
+                        
 
                     autoNav.modeText = modeText;
                 }
@@ -174,14 +182,14 @@ namespace AutoNavigate
         [HarmonyPatch(typeof(PlayerMove_Sail), "GameTick")]
         private class SailMode_AutoNavigate
         {
-            private static Quaternion oTargetURot;
+            private static VectorLF3 ofwdRayUDir;
 
             private static void Prefix(PlayerMove_Sail __instance)
             {
                 if (autoNav.enable && (__instance.player.sailing || __instance.player.warping))
                 {
                     ++__instance.controller.input0.y;
-                    oTargetURot = __instance.sailPoser.targetURot;
+                    ofwdRayUDir = __instance.controller.fwdRayUDir;
 
                     if (autoNav.IsCurNavStar())
                     {
@@ -199,10 +207,9 @@ namespace AutoNavigate
             {
                 if (autoNav.enable && (GameMain.localPlanet != null || autoNav.target.IsVaild() ))
                 {
-                    __instance.sailPoser.targetURot = oTargetURot;
                     autoNav.HandlePlayerInput();
                 }
-
+                __instance.controller.fwdRayUDir = ofwdRayUDir;
                 autoNav.sailSpeedUp = false;
             }
         }
@@ -231,11 +238,11 @@ namespace AutoNavigate
                     else if (
                         __instance.mecha.thrusterLevel < 2)
                     {
-                        autoNav.Arrive("驱动引擎等级过低".ModText());
+                        autoNav.Arrive("驱动引擎等级过低");
                     }
                     else if (__instance.player.mecha.coreEnergy < minAutoNavEnergy.Value)
                     {
-                        autoNav.Arrive("机甲能量过低".ModText());
+                        autoNav.Arrive("机甲能量过低");
                     }
                     else
                     {
@@ -270,11 +277,11 @@ namespace AutoNavigate
                     else if (
                         __instance.mecha.thrusterLevel < 1)
                     {
-                        autoNav.Arrive("驱动引擎等级过低".ModText());
+                        autoNav.Arrive("驱动引擎等级过低");
                     }
                     else if (__instance.player.mecha.coreEnergy < minAutoNavEnergy.Value)
                     {
-                        autoNav.Arrive("机甲能量过低".ModText());
+                        autoNav.Arrive("机甲能量过低");
                     }
                     else
                     {
@@ -301,6 +308,7 @@ namespace AutoNavigate
         {
             private static void Prefix(UIStarmap __instance)
             {
+
                 PlayerNavigation navigation = GameMain.mainPlayer.navigation;
                 if (__instance.focusPlanet != null &&
                     navigation._indicatorAstroId != __instance.focusPlanet.planet.id)
@@ -309,6 +317,8 @@ namespace AutoNavigate
                     AutoNavigate.focusDistance = __instance.focusPlanet.planet.uPosition;
                     AutoNavigate.tipsCount = 0;
                     autoNav.target.SetTarget(__instance.focusPlanet.planet);
+                    
+                    AutoNavigate.logger.LogInfo("planetid:" + __instance.focusPlanet.planet.id.ToString());
                 }
                 else if (__instance.focusStar != null && navigation._indicatorAstroId != __instance.focusStar.star.id * 100)
                 {
@@ -316,7 +326,10 @@ namespace AutoNavigate
                     AutoNavigate.focusDistance = __instance.focusStar.star.uPosition;
                     AutoNavigate.tipsCount = 0;
                     autoNav.target.SetTarget(__instance.focusStar.star);
+                    AutoNavigate.logger.LogInfo("starid:" + __instance.focusStar.star.id.ToString()+ "   focusDistance:"+ AutoNavigate.focusDistance.sqrMagnitude.ToString());
                 }
+
+                
             }
         }
 

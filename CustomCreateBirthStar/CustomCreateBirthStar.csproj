@@ -97,6 +97,9 @@
     <Content Include="行星主题.txt" />
     <Content Include="恒星数据.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Doc\星球主题.md" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>mkdir "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod"

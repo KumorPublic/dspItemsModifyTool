@@ -149,24 +149,35 @@ namespace CustomCreateBirthStar
         }
         */
 
+        /// <summary>
+        /// 临时修改行星主题的星球类型
+        /// </summary>
+        public static void ModifyPlanetTheme(int[] ThemeIds, EPlanetType planetType)
+        {
+            foreach (var Id in ThemeIds)
+            {
+                LDB.themes.Select(Id).PlanetType = planetType;
+            }
+        }
+
 
         /// <summary>
         /// 创建行星
         /// </summary>
         /// <param name="galaxy">银河系<para /></param>
         /// <param name="star">恒星<para /></param>
-        /// <param name="行星主题数组">行星主题数组<para /></param>
+        /// <param name="themeIDs">行星主题数组<para /></param>
         /// <param name="index">行星ID，0 - planetCount<para /></param>
-        /// <param name="orbitAround">绕谁转(0 = 恒星)<para /></param>
+        /// <param name="orbitAround">绕谁转(0 = 恒星, 如果绕行星转，则填行星的number)<para /></param>
         /// <param name="orbitIndex">轨道ID，1 - 13<para /></param>
-        /// <param name="number">卫星ID（如果本身是卫星，则此参数固定为0）<para /></param>
+        /// <param name="number">一个唯一的ID，用于确定卫星是绕这个id转（如果本身是卫星，则此参数固定为0）<para /></param>
         /// <param name="gasGiant">是否为巨星<para /></param>
         /// <param name="info_seed">种子1<para /></param>
         /// <param name="gen_seed">种子2<para /></param>
         /// <returns>PlanetData</returns>
-        public static PlanetData CreatePlanet(GalaxyData galaxy, StarData star, int[] 行星主题数组, int 行星ID, int 绕谁转, int 轨道ID, int 卫星ID, bool 是否为巨星, int info_seed, int gen_seed)
+        public static PlanetData CreatePlanet(GalaxyData galaxy, StarData star, int[] themeIDs, int index, int orbitAround, int orbitIndex, int number, bool gasGiant, int info_seed, int gen_seed)
         {
-            return PlanetGen.CreatePlanet(galaxy, star, 行星主题数组, 行星ID, 绕谁转, 轨道ID, 卫星ID, 是否为巨星, info_seed, gen_seed);
+            return PlanetGen.CreatePlanet(galaxy, star, themeIDs, index, orbitAround, orbitIndex, number, gasGiant, info_seed, gen_seed);
         }
 
         private static float RandNormal(float averageValue, float standardDeviation, double r1, double r2)
@@ -177,7 +188,7 @@ namespace CustomCreateBirthStar
         //输出恒星数据
         public static void OutputStarData(StarData Star)
         {
-            if (!CustomCreateBirthStarPlugin.Debug)
+            if (!CustomCreateBirthStarPlugin.Debug.Value)
             {
                 return;
             }

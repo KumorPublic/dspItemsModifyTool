@@ -195,10 +195,15 @@ namespace CustomCreateBirthStar
                     info_seed7 = dotNet35Random2.Next();
                     gen_seed7 = dotNet35Random2.Next();
                     star.planets[7] = PlanetGen.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 7, 7, 1, 0, false, info_seed7, gen_seed7);
-                    info_seed7 = dotNet35Random2.Next();
-                    gen_seed7 = dotNet35Random2.Next();
+                    // 设置为母星，覆盖上面的
+                    if (CustomCreateBirthStarPlugin.BirthStarAtOStar.Value)
+                    {
+                        CustomCreateBirthStarPlugin.BirthStarId = star.id;
+                        CustomCreateBirthStarPlugin.BirthPlanetId = star.planets[7].id;
+                    }
 
-                }else
+                }
+                else
                 {
                     {
                         if (num1 < 0.30000001192092896)
@@ -287,6 +292,8 @@ namespace CustomCreateBirthStar
 
                 
             }
+            
+            
             else
             {
                 Array.Clear((Array)___pGas, 0, ___pGas.Length);

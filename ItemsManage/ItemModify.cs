@@ -25,7 +25,9 @@ namespace ItemsManage
             //ItemManagePlugin.logger.LogInfo("GridIndex   " + LDB.items.Select(1203).GridIndex);
             //ItemManagePlugin.logger.LogInfo("ModelIndex   " + LDB.items.Select(1203).ModelIndex);
 
-
+            // 修改氚核燃料棒配方
+            LDB.recipes.Select(41).Items = new int[2] { 1107, 1121};
+            LDB.recipes.Select(41).ItemCounts = new int[2] { 1, 20 };
 
         }
     }

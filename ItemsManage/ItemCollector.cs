@@ -59,7 +59,7 @@ namespace ItemsManage
             int[] OutCount = new int[1] { 1 };
             int preTech = ProtoID.Tech.光子聚束采矿科技;
             NewRecipe = ProtoRegistry.RegisterRecipe(RecipeID, RecipeType, TimeSpend, Input, InCount, Output, OutCount, "轨道开采站描述", preTech, Grid, "轨道开采站", IconPath);
-
+            
             // 注册模型
             int ModelID = ProtoID.ModelID.轨道开采站;
             string PrefabPath = oldModel.PrefabPath;

@@ -74,7 +74,7 @@ namespace AutoBuild
                 return;
             }
 
-            if (Input.GetKeyDown(KeyCode.Z))
+            if (Input.GetKeyDown(KeyCode.Mouse4))
             {
                 AutoBuildPlugin.AutoBuildFlag = !AutoBuildPlugin.AutoBuildFlag;
                 if (!AutoBuildPlugin.AutoBuildFlag)

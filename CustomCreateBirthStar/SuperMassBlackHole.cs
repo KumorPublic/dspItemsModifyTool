@@ -133,7 +133,7 @@ namespace CustomCreateBirthStar
                 __result.dysonRadius = 1.92224f;
                 __result.orbitScaler = 6.865142f;
                 __result.level = 0.9919679f;
-                __result.resourceCoef = 6.654952f;
+                __result.resourceCoef = 60.0f;
                 __result.name = "残破庇护所 B";
                 __result.safetyFactor = 0.09f;
                 Util.OutputStarData(__result);
@@ -156,7 +156,7 @@ namespace CustomCreateBirthStar
                 __result.dysonRadius = 0.8838208f;
                 __result.orbitScaler = 3.156503f;
                 __result.level = 0.9919679f;
-                __result.resourceCoef = 4.148485f;
+                __result.resourceCoef = 60.0f;
                 __result.name = "残破庇护所 A";
                 __result.safetyFactor = 0.89f;
                 Util.OutputStarData(__result);
@@ -167,8 +167,15 @@ namespace CustomCreateBirthStar
                 //Util.Log("创建蓝巨星: id = " + id.ToString());
                 __result.spectr = ESpectrType.O;
                 __result.luminosity = 28.656674f + (float)(Rand * 0.3);//修改恒星光度
+                //__result.habitableRadius = 60.5f;
+                __result.resourceCoef = 60.0f;
                 __result.name = "残破工业区";
-                __result.safetyFactor = 0.80f;
+
+                // 战斗相关
+                __result.safetyFactor = 0.50f;
+                __result.initialHiveCount = 1 + (int)(CustomCreateBirthStarPlugin.DarkFogLv.Value * 0.5);
+                __result.hivePatternLevel = 1 + (int)(CustomCreateBirthStarPlugin.DarkFogLv.Value * 0.5);
+                __result.maxHiveCount = 8;
                 Util.OutputStarData(__result);
             }
             else if (id == STAR_ID_Custom4)
@@ -177,11 +184,11 @@ namespace CustomCreateBirthStar
                 __result.spectr = ESpectrType.M;
                 __result.name = "古战场";
                 __result.safetyFactor = 0.001f;
-                __result.resourceCoef = 20.0f;
+                __result.resourceCoef = 60.0f;
                 // 战斗相关
                 __result.safetyFactor = 0.001f;
-                __result.initialHiveCount = 4;
-                __result.hivePatternLevel = 2;
+                __result.initialHiveCount = 1 + (int)(CustomCreateBirthStarPlugin.DarkFogLv.Value * 0.8);
+                __result.hivePatternLevel = 1 + (int)(CustomCreateBirthStarPlugin.DarkFogLv.Value * 0.8);
                 __result.maxHiveCount = 8;
                 Util.OutputStarData(__result);
             }
@@ -204,14 +211,20 @@ namespace CustomCreateBirthStar
                 __result.dysonRadius = 0.19309f * 0;
                 __result.orbitScaler = 3.321507f;
                 __result.level = 1f;
-                __result.resourceCoef = 308.848314f; // 修改资源系数
+                // 修改资源系数
+                __result.resourceCoef = CustomCreateBirthStarPlugin.resourceCoef.Value;
+                
                 __result.name = "墓地";
                 // 战斗相关
                 __result.safetyFactor = 0.001f;
-                __result.initialHiveCount = 8;
-                __result.hivePatternLevel = 8;
+                __result.initialHiveCount = CustomCreateBirthStarPlugin.DarkFogLv.Value;
+                __result.hivePatternLevel = CustomCreateBirthStarPlugin.DarkFogLv.Value;
                 __result.maxHiveCount = 8;
                 Util.OutputStarData(__result);
+
+                
+
+
             }
             else {
                 return;
@@ -344,25 +357,69 @@ namespace CustomCreateBirthStar
                 else if(star.id == STAR_ID_Custom3)
                 {
                     //五个巨星, 一堆卫星
-                    int[] ThemeIds = { 2, 3, 4, 5, 21 };
-                    star.planetCount = 8;
-                    star.planets = new PlanetData[star.planetCount];
-                    //                                      galaxy,  star, 行星主题数组， index：行星编号，orbitAround=绕谁转(0=恒星)，orbitIndex=轨道ID    ，number=卫星id（如果本身是卫星，则此参数固定为0），是否巨星
-                    star.planets[0] = Util.CreatePlanet(galaxy, star, ThemeIds, 0, 0, 1, 1, true, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[1] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 1, 1, 1, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[2] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 2, 1, 2, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[3] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 3, 1, 4, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[4] = Util.CreatePlanet(galaxy, star, gameDesc.savedThemeIds, 4, 1, 5, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    int[] 气态巨星主题数组 = { 2, 3, 4, 5, 21 };
+                    int[] 宜居星球主题数组 = { 1, 8, 14, 15, 18, 22, 25 };
+                    int[] 随机星球主题数组 = gameDesc.savedThemeIds;
                     
-                    star.planets[5] = Util.CreatePlanet(galaxy, star, ThemeIds, 5, 0, 6, 6, true, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[6] = Util.CreatePlanet(galaxy, star, ThemeIds, 6, 0, 7, 7, true, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    star.planets[7] = Util.CreatePlanet(galaxy, star, ThemeIds, 7, 0, 8, 8, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    if (CustomCreateBirthStarPlugin.MorePlanet)
+                    {
+                        star.planetCount = 13;
+                    }
+                    else
+                    {
+                        star.planetCount = 8;
+                    }
 
-                    //star.planets[8] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 8, 0, 9, 9, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                    //star.planets[9] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 9, 0, 10, 10, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                   // star.planets[10] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 10, 0, 11, 11, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                   // star.planets[11] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 11, 0, 12, 12, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                   // star.planets[12] = myCreatePlanet(galaxy, star, gameDesc.savedThemeIds, 12, 0, 13, 13, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets = new PlanetData[star.planetCount];
+                    // 创建一颗巨星
+                    star.planets[0] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 0, 0, 1, 1, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    // 它的卫星
+                    {
+                        star.planets[1] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 1, 1, 1, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        star.planets[2] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 2, 1, 2, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        star.planets[3] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 3, 1, 4, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        star.planets[4] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 4, 1, 5, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    }
+
+                    // 创建一颗巨星
+                    star.planets[5] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 5, 0, 3, 3, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    // 它的卫星
+                    {
+                        star.planets[6] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 6, 3, 2, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        // 设置为母星
+                        if (CustomCreateBirthStarPlugin.BirthStarAtSuperMassBlackHole.Value)
+                        {
+                            CustomCreateBirthStarPlugin.BirthStarId = star.id;
+                            CustomCreateBirthStarPlugin.BirthPlanetId = star.planets[6].id;
+                        }
+                    }
+                    // 创建一颗巨星
+                    star.planets[7] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 7, 0, 7, 7, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+
+
+                    if (CustomCreateBirthStarPlugin.MorePlanet)
+                    {
+                        // 创建一颗巨星
+                        star.planets[8] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 8, 0, 8, 8, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        // 它的卫星
+                        {
+                            Util.ModifyPlanetTheme(宜居星球主题数组, EPlanetType.Desert);
+                            star.planets[9] = Util.CreatePlanet(galaxy, star, 宜居星球主题数组, 9, 8, 1, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                            star.planets[10] = Util.CreatePlanet(galaxy, star, 宜居星球主题数组, 10, 8, 3, 0, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                            Util.ModifyPlanetTheme(宜居星球主题数组, EPlanetType.Ocean);
+                            // 设置为母星，覆盖上面的
+                            if (CustomCreateBirthStarPlugin.BirthStarAtSuperMassBlackHole.Value)
+                            {
+                                CustomCreateBirthStarPlugin.BirthStarId = star.id;
+                                CustomCreateBirthStarPlugin.BirthPlanetId = star.planets[10].id;
+                            }
+
+                        }
+
+                        star.planets[11] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 11, 0, 9, 9, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        star.planets[12] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 12, 0, 13, 13, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+
+                    }
 
 
 
@@ -819,22 +876,6 @@ namespace CustomCreateBirthStar
             }
             
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
