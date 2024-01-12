@@ -99,6 +99,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Doc\星球主题.md" />
+    <None Include="Doc\更新日志.md" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

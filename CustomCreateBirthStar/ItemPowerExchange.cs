@@ -68,7 +68,7 @@ namespace CustomCreateBirthStar
             NewModel.prefabDesc.exchangeEnergyPerTick = (long)(ItemConfig.PowerCoreCfg.ExchangeEnergyPerTick);//输出功率
             NewModel.prefabDesc.fullId = ProtoID.物品.能量核心满;//燃料id
             NewModel.prefabDesc.emptyId = ProtoID.物品.能量核心;//燃料产物id
-
+            
             // 给模型上色
             Material material = UnityEngine.Object.Instantiate<Material>(NewModel.prefabDesc.lodMaterials[0][0]);
             material.color = Color.red;
@@ -145,17 +145,19 @@ namespace CustomCreateBirthStar
             NewModel.prefabDesc.exchangeEnergyPerTick = (long)(ItemConfig.PowerCoreCfg.ExchangeEnergyPerTick);//输出功率
             NewModel.prefabDesc.fullId = ProtoID.物品.能量核心满;//燃料id
             NewModel.prefabDesc.emptyId = ProtoID.物品.能量核心;//燃料产物id
-            NewModel.prefabDesc.powerCoverRadius = 500f;//修改半径
-            
+            NewModel.prefabDesc.powerCoverRadius = 460f;//修改半径
+            NewModel.prefabDesc.powerConnectDistance = 80f;// 链接距离
+            NewModel.prefabDesc.isPowerNode = true;
+
             // 没有效果
-            // NewModel.prefabDesc.idleEnergyPerTick = 120000000L / 60;//修改待机功率
-            // NewModel.prefabDesc.enemyIdleEnergy = 120000000 / 60;
-            
+             //NewModel.prefabDesc.idleEnergyPerTick = 120000000L / 60;//修改待机功率
+             //NewModel.prefabDesc.enemyIdleEnergy = 60000000 / 60;
+
             // 给模型上色
             Material material = UnityEngine.Object.Instantiate<Material>(NewModel.prefabDesc.lodMaterials[0][0]);
-            material.color = Color.white;
+            material.color = new Color(255/255, 40 / 255, 40 / 255, 0.8f);
             NewModel.prefabDesc.lodMaterials[0][0] = material;
-
+            
             
             NewModel.HpMax = 4500000;
             NewModel.HpRecover = 10000;

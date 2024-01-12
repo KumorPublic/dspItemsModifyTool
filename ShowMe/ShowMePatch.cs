@@ -7,7 +7,7 @@ namespace ShowMe
     [HarmonyPatch]
     class ShowMePatch
     {
-
+        /*
         //显示矿物采集速度
         [HarmonyPrefix]
         [HarmonyPatch(typeof(UIVeinDetailNode), "_OnUpdate")]
@@ -69,7 +69,9 @@ namespace ShowMe
             }
             return num;
         }
-
+        */
+        
+        
         //显示恒星系数据
         [HarmonyPostfix]
         [HarmonyPatch(typeof(UIStarDetail), "OnStarDataSet")]

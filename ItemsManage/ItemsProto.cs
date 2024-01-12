@@ -96,7 +96,7 @@ namespace ItemsManage
             public const int 星际能量枢纽 = 0;
             public const int 星际能量枢纽MK2 = 0;
 
-            public const int 轨道开采站 = 0;
+            public const int 轨道开采站 = 409;
 
         }
         public class ModelID

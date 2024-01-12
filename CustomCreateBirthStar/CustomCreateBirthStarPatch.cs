@@ -268,7 +268,7 @@ namespace CustomCreateBirthStar
             CodeMatcher matcher = new CodeMatcher(instructions);
 
             // 某种情况下高度大于600的垃圾会直接消失，这里把这个限制改成800
-            /*
+            
             matcher.MatchForward(
                 true,
                 new CodeMatch(OpCodes.Ldc_R8, 600.0)
@@ -281,7 +281,7 @@ namespace CustomCreateBirthStar
             }
 
             matcher.Set(OpCodes.Ldc_R8, 800.0);
-            */
+            
 
             // 寻找一段形如 A <= B + 8 的代码，然后将 +8 改为 +99
             matcher.MatchForward(false,

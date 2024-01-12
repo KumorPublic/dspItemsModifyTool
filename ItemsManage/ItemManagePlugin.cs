@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using CommonAPI;
 using CommonAPI.Systems;
@@ -22,7 +23,15 @@ namespace ItemsManage
         public const string GAME_PROCESS = "DSPGAME.exe";
         public static ManualLogSource logger;
         private static Harmony harmony;
-
+        
+        ///<summary>
+        ///模拟帧数量
+        ///</summary>
+        public static ConfigEntry<int> 模拟帧数量;
+        ///<summary>
+        ///不模拟本地星球
+        ///</summary>
+        public static ConfigEntry<bool> 不模拟本地星球;
 
         private void Awake()
         {
@@ -54,8 +63,24 @@ namespace ItemsManage
 
         private void LoadConfig()
         {
+            ItemManagePlugin.模拟帧数量 = this.Config.Bind<int>(
+                "模拟帧兼容",
+                "模拟帧数量",
+                1,
+                new ConfigDescription(
+                    "1 = 正常，5 = 5倍速运行",
+                    new AcceptableValueRange<int>(1, 10),
+                    new object[0]));
+            ItemManagePlugin.不模拟本地星球 = this.Config.Bind<bool>(
+                "模拟帧兼容",
+                "不模拟本地星球",
+                false,
+                new ConfigDescription(
+                    "是否加速本地星球",
+                    null,
+                    new object[0]));
 
-
+            
         }
 
 

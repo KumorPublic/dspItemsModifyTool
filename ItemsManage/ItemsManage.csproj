@@ -91,10 +91,6 @@ del /q "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\D
 copy "$(TargetPath)" "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\plugins\DSP_Kumor_Mod\$(TargetFileName)"
 mkdir "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)"
 del /q "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"
-copy "$(TargetPath)" "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"
-
-
-del /q "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\config\LDBTool\LDBTool.CustomGridIndex.cfg"
-del /q "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\DysonSphereProgram\profiles\戴森球计划\BepInEx\config\LDBTool\LDBTool.CustomID.cfg"</PostBuildEvent>
+copy "$(TargetPath)" "F:\Game\Steam\steamapps\common\Dyson Sphere Program\r2modmanPlus-local\Mod\$(ProjectName)\$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

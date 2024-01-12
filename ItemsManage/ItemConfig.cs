@@ -37,7 +37,7 @@
             ///<summary>
             ///每次作业抽水数量
             ///</summary>
-            public const int CollectorWaterNum = 3333;
+            public const int CollectorWaterNum = 333;
 
         }
 

@@ -35,7 +35,7 @@ namespace ItemsManage
                 );
             LocalizationModule.RegisterTranslation("轨道开采站描述",
                 "Minerals that can mine entire planets",
-                "可以开采整个行星的矿物",
+                "可以快速开采整个行星的矿物，但是矿物利用率不高（损失20%-30%的矿物）",
                 "Minerals that can mine entire planets"
                 );
             
@@ -103,22 +103,36 @@ namespace ItemsManage
             float miningSpeedScale = GameMain.history.miningSpeedScale;//采矿速度
             float miningCostRate = GameMain.history.miningCostRate;//消耗速率
             int needEnergy;
+            double tick = 120.0;
+            
+            /*
+            if (ItemManagePlugin.不模拟本地星球.Value  && __instance.planet.id == GameMain.mainPlayer.factory.planet.id)
+            {
+                tick = 120.0;
+            }
+            else
+            {
+                tick = 120 / ItemManagePlugin.模拟帧数量.Value;
+            }
+            */
 
             if ((double)miningSpeedScale <= 0.0)
             {
                 return;
             }
             //原始采矿速度下，每120Tick开采一次
-            int miningFrame = (int)(120.0 / (double)miningSpeedScale);
+            int miningFrame = (int)(tick / (double)miningSpeedScale);
             if (miningFrame < 1)
             {
-                miningFrame = 1;//如果采矿速度无限大，则每Tick开采一次
+                miningFrame = 1; // 如果采矿速度无限大，则每1Tick开采一次
             }
 
             if ((ulong)frame % (ulong)miningFrame > 0UL)
             {
                 return;
             }
+            
+            //ItemManagePlugin.logger.LogInfo("tick = " + tick.ToString()+ " frame = "+ frame.ToString());
 
             VeinData[] veinPool = __instance.factory.veinPool;
             Dictionary<int, List<int>> veins = new Dictionary<int, List<int>>();
@@ -163,7 +177,7 @@ namespace ItemsManage
                     continue;
                 }
                 //计算开采倍率
-                int energyMultiplier = 0;
+                float energyMultiplier = 0;
                 int Multiplier = GetMultiplier(__instance.planet.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
                 //ItemManagePlugin.logger.LogInfo("Multiplier = " + Multiplier.ToString());
                 //ItemManagePlugin.logger.LogInfo("energyMultiplier = " + energyMultiplier.ToString());
@@ -213,22 +227,25 @@ namespace ItemsManage
                                     {
                                         if (GetMine(veinPool, i, miningCostRate, __instance.planet.factory, Multiplier))
                                         {
-                                            numOil += ItemConfig.CollectorCfg.CollectorOilNum * Multiplier;//增加油
+                                            numOil += (int)(ItemConfig.CollectorCfg.CollectorOilNum * Multiplier);//增加油
                                         }
                                         else
                                         {
                                             //如果石油枯竭，50%概率增加1个油
-                                            if (new System.Random().Next(1, 100) > 50)
-                                            {
-                                                numOil++;
-                                            }
+                                            //if (new System.Random().Next(1, 100) > 50)
+                                            //{
+                                            //    numOil++;
+                                            //}
+                                            
+                                            // 枯竭后不出油
                                         }
                                     }
                                 }
                                 //如果获得的矿物>0，则计算耗电量、库存和统计数据
-                                if (numOil > 0f)
+                                if (numOil > 0)
                                 {
                                     needEnergy++;
+                                    numOil = (int)(numOil * 0.8f); // 没收20%的矿
                                     stationComponent.storage[StorageIndex].count += (int)numOil;
                                     if (flag)
                                     {
@@ -246,9 +263,9 @@ namespace ItemsManage
                                     if (GetMine(veinPool, i, miningCostRate, __instance.planet.factory, Multiplier))
                                     {
                                         MineTime++;
-                                        numVein += ItemConfig.CollectorCfg.CollectorMineNum * Multiplier;
+                                        numVein += (int)(ItemConfig.CollectorCfg.CollectorMineNum * Multiplier);
                                     }
-                                    if (MineTime > 99)
+                                    if (MineTime > 500)
                                     {
                                         break;
                                     }
@@ -257,6 +274,9 @@ namespace ItemsManage
                                 if (numVein > 0)
                                 {
                                     needEnergy++;
+                                    //ItemManagePlugin.logger.LogInfo("numVein = " + numVein.ToString());
+                                    numVein = (int)(numVein * 0.8f); // 没收30%的矿
+                                    //ItemManagePlugin.logger.LogInfo("numVein = " + numVein.ToString());
                                     stationComponent.storage[StorageIndex].count += numVein;
                                     if (flag)
                                     {
@@ -273,7 +293,7 @@ namespace ItemsManage
                             float c = 1 - __instance.planet.landPercent;//根据海洋面积计算开采量
                             if (c > 0)
                             {
-                                numWater = (int)(ItemConfig.CollectorCfg.CollectorWaterNum * c) * Multiplier;
+                                numWater = (int)(ItemConfig.CollectorCfg.CollectorWaterNum * c * Multiplier);
                             }
 
                             if (numWater > 0)
@@ -303,6 +323,7 @@ namespace ItemsManage
             }
 
         }
+        
         //在界面显示挖矿倍率
         [HarmonyPostfix]
         [HarmonyPatch(typeof(UIStationWindow), "OnMaxChargePowerSliderValueChange")]
@@ -325,24 +346,24 @@ namespace ItemsManage
             {
                 return;
             }
-            int energyMultiplier = 0;
-            int Multiplier = GetMultiplier(__instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
+            float energyMultiplier = 0;
+            float Multiplier = GetMultiplier(__instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
             //__instance.maxChargePowerValue.rectTransform.localScale = new Vector3(10,1,1);
             //__instance.maxChargePowerValue.text = "效率:"+Multiplier.ToString() + "00%" ;
             //ItemManagePlugin.logger.LogInfo(__instance.maxChargePowerValue.text);
             //ItemManagePlugin.logger.LogInfo("效率: " + Multiplier.ToString() + "× 能耗: " + energyMultiplier.ToString() + "×" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000)).ToString() + "MJ×5");
-            string name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
+            
+            string name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + (Multiplier * 100).ToString("F0") + " %" + " 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString("F2") + " MW";
             __instance.nameInput.text = name;
         }
 
         //计算挖矿倍率
-        private static int GetMultiplier(long workEnergyPerTick, long energy, ref int energyMultiplier)
+        private static int GetMultiplier(long workEnergyPerTick, long energy, ref float energyMultiplier)
         {
-            int Multiplier = (int)(workEnergyPerTick / (ItemConfig.CollectorCfg.MaxEnergyPerTick1 / 3));
+            int Multiplier = (int)(workEnergyPerTick / (ItemConfig.CollectorCfg.MaxEnergyPerTick1 / 4));
             //倍数必须在1-3之间
-            //Multiplier = Multiplier > 3 ? 3 : Multiplier < 1 ? 1 : energy < ItemConfig.CollectorCfg.MaxFuelEnergyAcc ? 1 : Multiplier;
-            Multiplier = Multiplier > 3 ? 3 : Multiplier < 1 ? 1 : Multiplier;
-            energyMultiplier = Multiplier * Multiplier;
+            Multiplier = Multiplier > 4 ? 4 : Multiplier < 1 ? 1 : Multiplier;
+            energyMultiplier = (float)Math.Pow(Multiplier, 1.6);
             return Multiplier;
         }
 
@@ -374,27 +395,52 @@ namespace ItemsManage
                 __instance.droneIconButton.gameObject.SetActive(true);
                 return;
             }
-            int energyMultiplier = 0;
-            int Multiplier = GetMultiplier(__instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
-            string name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
+            float energyMultiplier = 0;
+            float Multiplier = GetMultiplier(__instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
+            string name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + (Multiplier * 100).ToString("F0") + " %" + " 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString("F2") + " MW";
             //stationComponent.name = "轨道开采站".Translate() + " #" + stationComponent.gid.ToString() + " 效率:" + Multiplier.ToString() + "00% 能耗:" + ((int)(ItemConfig.CollectorCfg.UseEnergy / 1000000) * energyMultiplier * 5).ToString() + "MW";
             __instance.nameInput.text = name;
+
+            //__instance.windowTrans.sizeDelta = new Vector2(600f, (float)(100 + 76 * 5 + 36));
 
             __instance.powerGroupRect.sizeDelta = new Vector2(540f, 40f);
 
             __instance.panelDown.SetActive(true);
             __instance.shipIconButton.gameObject.SetActive(false);
+            __instance.droneIconButton.gameObject.SetActive(false);
             __instance.warperIconButton.gameObject.SetActive(false);
             __instance.configGroup.gameObject.SetActive(true);
+            // 修改功率
             __instance.maxChargePowerGroup.gameObject.SetActive(true);
+            // 飞机
             __instance.maxTripDroneGroup.gameObject.SetActive(false);
             __instance.maxTripVesselGroup.gameObject.SetActive(false);
+            // 是否从采集器收取货物
             __instance.includeOrbitCollectorGroup.gameObject.SetActive(false);
+            // 曲速
             __instance.warperDistanceGroup.gameObject.SetActive(false);
             __instance.warperNecessaryGroup.gameObject.SetActive(false);
+            // 最小运输量
             __instance.minDeliverDroneGroup.gameObject.SetActive(false);
             __instance.minDeliverVesselGroup.gameObject.SetActive(false);
-            __instance.droneIconButton.gameObject.SetActive(false);
+            
+            // 自动补充飞船
+            __instance.shipAutoReplenishButton.gameObject.SetActive(false);
+            __instance.droneAutoReplenishButton.gameObject.SetActive(false);
+
+
+            //__instance.maxMiningSpeedGroup.gameObject.SetActive(false);
+            
+            // 是否堆叠
+            //__instance.minPilerGroup.gameObject.SetActive(false);
+            //__instance.pilerTechGroup.gameObject.SetActive(false);
+
+            //__instance.droneBox.SetActive(false);
+            //__instance.shipBox.SetActive(false);
+            //__instance.warperBox.SetActive(false);
+            //__instance.powerStateObj.SetActive(false);
+
+            
 
             //ItemsModifyToolPlugin.logger.LogInfo("itemProto.ID   " + stationComponent.name);
             //ItemsModifyToolPlugin.logger.LogInfo("itemProto.ID   " + __instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick.ToString());
