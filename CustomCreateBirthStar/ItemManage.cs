@@ -146,7 +146,7 @@ namespace CustomCreateBirthStar
             LDB.techs.Select(ProtoID.Tech.古代技术_行星级无线输电).PropertyOverrideItemArray = PropertyOverrideItemArray;
 
             Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "科技添加完成");
-
+            
         }
 
 

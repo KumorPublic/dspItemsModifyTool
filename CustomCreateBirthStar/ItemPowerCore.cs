@@ -51,6 +51,7 @@ namespace CustomCreateBirthStar
             ProtoRegistry.onLoadingFinished += new Action(Finished);
 
 
+            
         }
 
 
@@ -60,7 +61,8 @@ namespace CustomCreateBirthStar
             NewModel.prefabDesc.outputEnergyPerTick = 0;//修改功率
             NewModel.prefabDesc.inputEnergyPerTick = 0;
             NewItem.CanBuild = false;
-
+            
+            
             Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "原型添加完成");
         }
 

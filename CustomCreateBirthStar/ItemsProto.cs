@@ -101,13 +101,13 @@ namespace CustomCreateBirthStar
         }
         public class ModelID
         {
-            public const int 能量核心 = 480;
-            public const int 能量核心满 = 481;
+            public const int 能量核心 = 520;
+            public const int 能量核心满 = 521;
 
-            public const int 星际能量枢纽 = 482;
-            public const int 星际能量枢纽MK2 = 483;
+            public const int 星际能量枢纽 = 522;
+            public const int 星际能量枢纽MK2 = 523;
 
-            public const int 轨道开采站 = 484;
+            public const int 轨道开采站 = 530;
         }
 
 
