@@ -196,7 +196,7 @@ namespace CustomCreateBirthStar
             else if (id == STAR_ID_BigHole)
             {
                 //Util.Log("创建超重黑洞: id = " + id.ToString());
-                __result.mass = 300.57f + (float)(Rand * 100);
+                __result.mass = 100.57f + (float)(Rand * 100); //300
                 __result.lifetime = 0.001710792f + 1000 + (float)(Rand * 200);
                 __result.age = 1.122148f + 1000 + (float)(Rand * 100);
                 __result.type = EStarType.BlackHole;
@@ -205,7 +205,7 @@ namespace CustomCreateBirthStar
                 __result.classFactor = 2f;
                 __result.color = 1f;
                 __result.luminosity = 0.000001f;
-                __result.radius = 48.73534f + (float)(Rand * 2.5);
+                __result.radius = 18.73534f + (float)(Rand * 2.5);// 48
                 __result.acdiskRadius = 243.6767f;
                 __result.habitableRadius = 0f;
                 __result.lightBalanceRadius = 3.178286f;
@@ -395,7 +395,7 @@ namespace CustomCreateBirthStar
                         }
                     }
                     // 创建一颗巨星
-                    star.planets[7] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 7, 0, 7, 7, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                    star.planets[7] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 7, 0, 5, 5, true, dotNet35Random2.Next(), dotNet35Random2.Next());
 
 
                     if (CustomCreateBirthStarPlugin.MorePlanet)
@@ -417,8 +417,8 @@ namespace CustomCreateBirthStar
 
                         }
 
-                        star.planets[11] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 11, 0, 9, 9, false, dotNet35Random2.Next(), dotNet35Random2.Next());
-                        star.planets[12] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 12, 0, 13, 13, true, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        star.planets[11] = Util.CreatePlanet(galaxy, star, 随机星球主题数组, 11, 0, 6, 6, false, dotNet35Random2.Next(), dotNet35Random2.Next());
+                        star.planets[12] = Util.CreatePlanet(galaxy, star, 气态巨星主题数组, 12, 0, 7, 7, true, dotNet35Random2.Next(), dotNet35Random2.Next());
 
                     }
 

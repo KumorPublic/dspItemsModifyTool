@@ -28,12 +28,19 @@ namespace ItemsManage
             //ItemManagePlugin.logger.LogInfo("ModelIndex   " + LDB.items.Select(1203).ModelIndex);
 
             // 修改氚核燃料棒配方
-            LDB.recipes.Select(41).Items = new int[2] { 1106, 1121 };
-            LDB.recipes.Select(41).ItemCounts = new int[2] { 1, 20 };
+            //LDB.recipes.Select(41).Items = new int[2] { 1106, 1121 };
+            //LDB.recipes.Select(41).ItemCounts = new int[2] { 1, 20 };
             // 充电塔链接距离
             LDB.items.Select(2202).prefabDesc.powerConnectDistance = 180;
 
 
+            // 机甲飞行速度
+            //LDB.techs.Select(2903).UnlockValues[0] = 3000;
+            //TechProto techProto = LDB.techs.Select(2903);
+            // for (int j = 0; j < techProto.UnlockFunctions.Length; j++)
+            //{
+            //    ItemManagePlugin.logger.LogInfo("UnlockFunctions: " + techProto.UnlockFunctions[j] + "UnlockValues: " + techProto.UnlockValues[j]); 
+            //}
         }
     }
 

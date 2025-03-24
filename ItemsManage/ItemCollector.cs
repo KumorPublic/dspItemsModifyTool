@@ -4,6 +4,7 @@ using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using UnityEngine;
 
 
@@ -547,7 +548,8 @@ namespace ItemsManage
                         {
                             factory.RemoveVeinWithComponents(veinIndex);
                             factory.RecalculateVeinGroup(veinPool[veinIndex].groupIndex);
-                            factory.NotifyVeinExhausted();
+                            //factory.NotifyVeinExhausted((int)veinPool[veinIndex].type, veinPool[veinIndex].pos);
+                            //factory.RecalculateVeinGroup((int)groupIndex);
                         }
                     }
                     return true;
@@ -557,7 +559,7 @@ namespace ItemsManage
                     //如果矿物耗尽则删除矿堆
                     factory.RemoveVeinWithComponents(veinIndex);
                     factory.RecalculateVeinGroup(veinPool[veinIndex].groupIndex);
-                    factory.NotifyVeinExhausted();
+                    //factory.NotifyVeinExhausted((int)veinPool[veinIndex].type, veinPool[veinIndex].pos);
                     return false;
                 }
 

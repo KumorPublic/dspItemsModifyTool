@@ -1,21 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.30907.101
+# Visual Studio Version 17
+VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trash2Sand", ".\Trash2Sand\Trash2Sand.csproj", "{B6BC4EB4-0922-4ABF-8407-FAAE717CBC26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloseDraw", "CloseDraw\CloseDraw.csproj", "{CD304E33-49AB-4847-A810-4D48CF0245EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloseDraw", ".\CloseDraw\CloseDraw.csproj", "{CD304E33-49AB-4847-A810-4D48CF0245EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCreateBirthStar", "CustomCreateBirthStar\CustomCreateBirthStar.csproj", "{EB70A84A-AEBB-48E9-849F-0254338582C0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCreateBirthStar", ".\CustomCreateBirthStar\CustomCreateBirthStar.csproj", "{EB70A84A-AEBB-48E9-849F-0254338582C0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuild", "AutoBuild\AutoBuild.csproj", "{0016F6A3-3DDF-41DA-A27F-5D2E6B859435}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShowMe", ".\ShowMe\ShowMe.csproj", "{3E893655-DFE1-438E-9364-657B33EC57EE}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template", ".\Template\Template.csproj", "{35690FD1-444C-4D1A-AAF8-11965FF00E49}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuild", ".\AutoBuild\AutoBuild.csproj", "{0016F6A3-3DDF-41DA-A27F-5D2E6B859435}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsManage", ".\ItemsManage\ItemsManage.csproj", "{8F7E2957-931C-4F17-9DE7-8DBC07DD7408}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItemsManage", "ItemsManage\ItemsManage.csproj", "{8F7E2957-931C-4F17-9DE7-8DBC07DD7408}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +17,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B6BC4EB4-0922-4ABF-8407-FAAE717CBC26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B6BC4EB4-0922-4ABF-8407-FAAE717CBC26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B6BC4EB4-0922-4ABF-8407-FAAE717CBC26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B6BC4EB4-0922-4ABF-8407-FAAE717CBC26}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -35,14 +25,6 @@ Global
 		{EB70A84A-AEBB-48E9-849F-0254338582C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB70A84A-AEBB-48E9-849F-0254338582C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB70A84A-AEBB-48E9-849F-0254338582C0}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3E893655-DFE1-438E-9364-657B33EC57EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3E893655-DFE1-438E-9364-657B33EC57EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3E893655-DFE1-438E-9364-657B33EC57EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3E893655-DFE1-438E-9364-657B33EC57EE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{35690FD1-444C-4D1A-AAF8-11965FF00E49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{35690FD1-444C-4D1A-AAF8-11965FF00E49}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{35690FD1-444C-4D1A-AAF8-11965FF00E49}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{35690FD1-444C-4D1A-AAF8-11965FF00E49}.Release|Any CPU.Build.0 = Release|Any CPU
 		{0016F6A3-3DDF-41DA-A27F-5D2E6B859435}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{0016F6A3-3DDF-41DA-A27F-5D2E6B859435}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0016F6A3-3DDF-41DA-A27F-5D2E6B859435}.Release|Any CPU.ActiveCfg = Release|Any CPU
