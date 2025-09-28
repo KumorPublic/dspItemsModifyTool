@@ -1,27 +1,42 @@
 ﻿using HarmonyLib;
 using System.Reflection;
 using System;
+using ABN;
 
 namespace ItemsManage
 {
     ///<summary>
-    ///修改储液罐容量
+    /// 修改储液罐容量，修改一些建筑参数
     ///</summary>
-    class ItemTankStorage
+    public class ItemModiy
     {
-        private static bool alreadyInitializedTankStorage;
+        private static bool alreadyModiy = false;
 
         [HarmonyPostfix]
         [HarmonyPatch(typeof(VFPreload), "InvokeOnLoadWorkEnded")]
         public static void InvokeOnLoadWorkEnded()
         {
-            if (alreadyInitializedTankStorage)
+            
+            if (alreadyModiy)
             {
                 return;
             }
-            alreadyInitializedTankStorage = true;
+            alreadyModiy = true;
 
-            LDB.items.Select(2106).prefabDesc.fluidStorageCount = ItemConfig.ModifyCfg.TankStorage.fluidStorageCount;
+
+            // 修改储液罐容量
+            if (ItemManagePlugin.储液罐.Value)
+            {
+                LDB.items.Select(2106).prefabDesc.fluidStorageCount = ItemConfig.ModifyCfg.储液罐.容量;
+            }
+
+            // 充电塔链接距离
+            if (ItemManagePlugin.充电塔.Value)
+            {
+                LDB.items.Select(2202).prefabDesc.powerConnectDistance = ItemConfig.ModifyCfg.充电塔.链接距离;
+            }
+
+            //LDB.items.Select(3004).prefabDesc.turretSpaceAttackRange = 800000;
 
             //ItemManagePlugin.logger.LogInfo("BuildIndex   " + LDB.items.Select(1203).BuildIndex);
             //ItemManagePlugin.logger.LogInfo("GridIndex   " + LDB.items.Select(1203).GridIndex);
@@ -30,8 +45,6 @@ namespace ItemsManage
             // 修改氚核燃料棒配方
             //LDB.recipes.Select(41).Items = new int[2] { 1106, 1121 };
             //LDB.recipes.Select(41).ItemCounts = new int[2] { 1, 20 };
-            // 充电塔链接距离
-            LDB.items.Select(2202).prefabDesc.powerConnectDistance = 180;
 
 
             // 机甲飞行速度
@@ -44,48 +57,8 @@ namespace ItemsManage
         }
     }
 
-    ///<summary>
-    ///修改机甲翘曲器堆叠
-    ///</summary>
-    /**
-    class ItemWarpStorage
-    {
-        public static void Init()
-        {
-            GameMain.mainPlayer.mecha.warpStorage.SetFilter(0, ItemsProtoID.空间翘曲器, ItemConfig.ModifyCfg.WarpStorage.StackSize);
-            GameMain.mainPlayer.mecha.warpStorage.Sort();
-        }
 
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Mecha), "Init")]
-        public static void MechaInit(Mecha __instance)
-        {
-            __instance.warpStorage.SetFilter(0, ItemsProtoID.空间翘曲器, ItemConfig.ModifyCfg.WarpStorage.StackSize);
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch(typeof(Mecha), "SetForNewGame")]
-        public static void MechaSetForNewGame(Mecha __instance)
-        {
-            __instance.warpStorage.SetFilter(0, ItemsProtoID.空间翘曲器, ItemConfig.ModifyCfg.WarpStorage.StackSize);
-        }
-
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(StorageComponent), "SetFilter")]
-        public static void StorageComponentSetFilter(int gridIndex, int itemId, ref int stackSize)
-        {
-            //ItemManagePlugin.logger.LogInfo("ModelIndex111111111111" + itemId.ToString());
-            if (itemId == ItemsProtoID.空间翘曲器)
-            {
-                stackSize = ItemConfig.ModifyCfg.WarpStorage.StackSize;
-            }
-        }
-
-    }
-    **/
-
-
+    
 
 
     public class ItemManageTest

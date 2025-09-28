@@ -36,6 +36,7 @@ namespace ItemsManage
         {
             public const int 煤 = 1006;
             public const int 原油 = 1007;
+            public const int 可燃冰 = 1011;
             public const int 单极磁石 = 1016;
 
             public const int 钛合金 = 1107;

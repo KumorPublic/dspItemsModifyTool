@@ -13,7 +13,7 @@ namespace ItemsManage
     ///<summary>
     ///星球矿机
     ///</summary>
-    class ItemCollector
+    public class ItemCollector
     {
         private static ItemProto oldItem;
         private static RecipeProto oldRecipe;
@@ -22,9 +22,7 @@ namespace ItemsManage
         private static RecipeProto NewRecipe;
         private static ModelProto NewModel;
 
-        private static long frame = 0L;
-        private static uint seed = 100000U;
-
+        private static double costFrac;// 它用于将浮点采矿速率转为整数消耗，避免因速率过低导致采集不到资源
 
         public static void AddItem()
         {
@@ -36,7 +34,7 @@ namespace ItemsManage
                 );
             LocalizationModule.RegisterTranslation("轨道开采站描述",
                 "Minerals that can mine entire planets",
-                "可以快速开采整个行星的矿物，但是矿物利用率不高（损失20%-30%的矿物）",
+                "可以快速开采整个行星的矿物，但是矿物利用率不高（损失20%的矿物）",
                 "Minerals that can mine entire planets"
                 );
             
@@ -102,52 +100,37 @@ namespace ItemsManage
         public static void FactorySystemGameTick(ref FactorySystem __instance)
         {
             float miningSpeedScale = GameMain.history.miningSpeedScale;//采矿速度
-            float miningCostRate = GameMain.history.miningCostRate;//消耗速率
-            int needEnergy;
-            double tick = 120.0;
-            
-            /*
-            if (ItemManagePlugin.不模拟本地星球.Value  && __instance.planet.id == GameMain.mainPlayer.factory.planet.id)
-            {
-                tick = 120.0;
-            }
-            else
-            {
-                tick = 120 / ItemManagePlugin.模拟帧数量.Value;
-            }
-            */
 
-            if ((double)miningSpeedScale <= 0.0)
+            float tick = 120.0f;
+
+
+            if (miningSpeedScale <= 0f)
             {
                 return;
             }
-            //原始采矿速度下，每120Tick开采一次
-            int miningFrame = (int)(tick / (double)miningSpeedScale);
-            if (miningFrame < 1)
-            {
-                miningFrame = 1; // 如果采矿速度无限大，则每1Tick开采一次
-            }
 
-            if ((ulong)frame % (ulong)miningFrame > 0UL)
+            // 原始采矿速度下，每120Tick开采一次
+            int miningFrame = (int)(tick / miningSpeedScale);
+            if (miningFrame < 12)
             {
-                return;
+                miningFrame = 12; // 采矿速度上限为1000%
             }
             
+            if (ItemManagePlugin.frame % miningFrame > 0)
+            {
+                // 如果有余数，说明不到采矿帧
+                return;
+            }
+
             //ItemManagePlugin.logger.LogInfo("tick = " + tick.ToString()+ " frame = "+ frame.ToString());
 
+            float miningCostRate = GameMain.history.miningCostRate; // 消耗速率
+            int needEnergy;
+
+            // 获取矿池
             VeinData[] veinPool = __instance.factory.veinPool;
             Dictionary<int, List<int>> veins = new Dictionary<int, List<int>>();
-            if (__instance.minerPool[0].seed == 0U)
-            {
-                System.Random random = new System.Random();
-                __instance.minerPool[0].seed = (uint)(__instance.planet.id * 100000 + random.Next(1, 9999));
-            }
-            else
-            {
-                seed = __instance.minerPool[0].seed;
-            }
-
-
+            
             for (int index = 0; index < veinPool.Length; ++index)
             {
                 VeinData veinData = veinPool[index];
@@ -157,7 +140,7 @@ namespace ItemsManage
                 }
 
             }
-            //注册生产统计
+            // 注册生产统计
             int[] numArray = (int[])null;
             bool flag = false;
             if (GameMain.statistics.production.factoryStatPool[__instance.factory.index] != null)
@@ -165,6 +148,7 @@ namespace ItemsManage
                 numArray = GameMain.statistics.production.factoryStatPool[__instance.factory.index].productRegister;
                 flag = true;
             }
+
             //扫描星球上每个运输站
             foreach (StationComponent stationComponent in __instance.planet.factory.transport.stationPool)
             {
@@ -172,12 +156,12 @@ namespace ItemsManage
                 {
                     continue;
                 }
-                //匹配开采站的id
+                // 匹配开采站的id
                 if (__instance.planet.factory.entityPool[stationComponent.entityId].protoId != ProtoID.物品.轨道开采站)
                 {
                     continue;
                 }
-                //计算开采倍率
+                // 计算开采倍率
                 float energyMultiplier = 0;
                 int Multiplier = GetMultiplier(__instance.planet.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick, stationComponent.energy, ref energyMultiplier);
                 //ItemManagePlugin.logger.LogInfo("Multiplier = " + Multiplier.ToString());
@@ -212,6 +196,11 @@ namespace ItemsManage
                             stationComponent.storage[StorageIndex].count -= 50;//减掉库存
                             stationComponent.energy += (long)(50 * 270000 * 5); //2.7MJ
                         }
+                        else if (Store.itemId == ProtoID.物品.可燃冰)
+                        {
+                            stationComponent.storage[StorageIndex].count -= 50;//减掉库存
+                            stationComponent.energy += (long)(50 * 480000 * 5); //2.7MJ
+                        }
                     }
                     if (Store.max > Store.count)//如果库存未满
                     {
@@ -237,8 +226,8 @@ namespace ItemsManage
                                             //{
                                             //    numOil++;
                                             //}
-                                            
-                                            // 枯竭后不出油
+                                            //numOil += Multiplier; // 增加油
+                                            // 油井枯竭后无法采集
                                         }
                                     }
                                 }
@@ -247,10 +236,10 @@ namespace ItemsManage
                                 {
                                     needEnergy++;
                                     numOil = (int)(numOil * 0.8f); // 没收20%的矿
-                                    stationComponent.storage[StorageIndex].count += (int)numOil;
+                                    stationComponent.storage[StorageIndex].count += numOil;
                                     if (flag)
                                     {
-                                        numArray[Store.itemId] += (int)numOil;
+                                        numArray[Store.itemId] += numOil;
                                     }
                                 }
 
@@ -276,7 +265,7 @@ namespace ItemsManage
                                 {
                                     needEnergy++;
                                     //ItemManagePlugin.logger.LogInfo("numVein = " + numVein.ToString());
-                                    numVein = (int)(numVein * 0.8f); // 没收30%的矿
+                                    numVein = (int)(numVein * 0.8f); // 没收20%的矿
                                     //ItemManagePlugin.logger.LogInfo("numVein = " + numVein.ToString());
                                     stationComponent.storage[StorageIndex].count += numVein;
                                     if (flag)
@@ -325,7 +314,7 @@ namespace ItemsManage
 
         }
         
-        //在界面显示挖矿倍率
+        // 在界面显示挖矿倍率
         [HarmonyPostfix]
         [HarmonyPatch(typeof(UIStationWindow), "OnMaxChargePowerSliderValueChange")]
         public static void UIStationWindowOnMaxChargePowerSliderValueChange(UIStationWindow __instance, float value)
@@ -406,11 +395,26 @@ namespace ItemsManage
 
             __instance.powerGroupRect.sizeDelta = new Vector2(540f, 40f);
 
+
+            
+           
+
             __instance.panelDown.SetActive(true);
+
+            //__instance.transportTabButton.gameObject.SetActive(false);
+            //__instance.settingTabButton.gameObject.SetActive(false);
+            //__instance.sepLineButton.gameObject.SetActive(false);
+
+            
+
             __instance.shipIconButton.gameObject.SetActive(false);
+            __instance.shipAutoReplenishButton.gameObject.SetActive(false);
             __instance.droneIconButton.gameObject.SetActive(false);
             __instance.warperIconButton.gameObject.SetActive(false);
+            // 启用配置面板
             __instance.configGroup.gameObject.SetActive(true);
+            // 禁用优先级面板
+            __instance.priorityGroup.gameObject.SetActive(false);
             // 修改功率
             __instance.maxChargePowerGroup.gameObject.SetActive(true);
             // 飞机
@@ -430,18 +434,28 @@ namespace ItemsManage
             __instance.droneAutoReplenishButton.gameObject.SetActive(false);
 
 
-            //__instance.maxMiningSpeedGroup.gameObject.SetActive(false);
-            
+
+            // 开采速度
+            //__instance.maxMiningSpeedGroup.gameObject.SetActive(true);
+            //__instance.maxMiningSpeedGroup.anchoredPosition = new Vector2(__instance.maxChargePowerGroup.anchoredPosition.x, -24f);
+
             // 是否堆叠
             //__instance.minPilerGroup.gameObject.SetActive(false);
             //__instance.pilerTechGroup.gameObject.SetActive(false);
+            //__instance.minPilerGroup.anchoredPosition = new Vector2(__instance.minPilerGroup.anchoredPosition.x, -44f);
+            //__instance.pilerTechGroup.anchoredPosition = new Vector2(__instance.pilerTechGroup.anchoredPosition.x, -44f);
 
             //__instance.droneBox.SetActive(false);
             //__instance.shipBox.SetActive(false);
             //__instance.warperBox.SetActive(false);
             //__instance.powerStateObj.SetActive(false);
 
-            
+
+            __instance.stationSettingTabBtn.gameObject.SetActive(value: false);
+            __instance.prioritySettingTabBtn.gameObject.SetActive(value: false);
+            __instance.configGroup.gameObject.SetActive(value: false);
+            __instance.priorityGroup.gameObject.SetActive(value: false);
+            __instance.uiRoutePanel.gameObject.SetActive(false);
 
             //ItemsModifyToolPlugin.logger.LogInfo("itemProto.ID   " + stationComponent.name);
             //ItemsModifyToolPlugin.logger.LogInfo("itemProto.ID   " + __instance.factory.powerSystem.consumerPool[stationComponent.pcId].workEnergyPerTick.ToString());
@@ -480,10 +494,6 @@ namespace ItemsManage
         }
 
 
-        public static void SetFrame()
-        {
-            ++ItemCollector.frame;
-        }
 
         //创建矿物id-索引字典
         public static void AddVeinData(Dictionary<int, List<int>> veins, int item, int index)
@@ -497,31 +507,35 @@ namespace ItemsManage
 
         //计算本次采矿相关数值
         //参考方法 MinerComponent.InternalUpdate()
-        public static bool GetMine(VeinData[] veinPool, int veinIndex, float miningCostRate, PlanetFactory factory, int Multiplier)
+        public static bool GetMine(VeinData[] veinPool, int veinIndex, float miningRate, PlanetFactory factory, int Multiplier)
         {
             if (veinPool.Length <= veinIndex || veinPool[veinIndex].productId <= 0)//检查索引合法性
                 return false;
 
             if (veinPool[veinIndex].type == EVeinType.Oil)//如果是油
             {
+                // 油是否枯竭
                 if (veinPool[veinIndex].amount > 2500)
                 {
-                    //未枯竭
-                    if ((double)miningCostRate > 0.0)
+                    // 把每次采矿的小数点累计起来，满1则扣除
+                    bool flag = false;
+                    if (miningRate > 0f)
                     {
-                        seed = (uint)((ulong)(seed % 2147483646U + 1U) * 48271UL % (ulong)int.MaxValue) - 1U;
-                        if ((double)seed / 2147483646.0 < (double)miningCostRate)
-                        {
-                            veinPool[veinIndex].amount -= ItemConfig.CollectorCfg.CollectorOilNum * Multiplier;//单个矿物总数-
-                            factory.veinGroups[(int)veinPool[veinIndex].groupIndex].amount -= ItemConfig.CollectorCfg.CollectorMineNum * Multiplier;//地表矿堆总数-
-                            factory.veinAnimPool[veinIndex].time = veinPool[veinIndex].amount >= 25000 ? 0.0f : (float)(1.0 - (double)veinPool[veinIndex].amount * (double)VeinData.oilSpeedMultiplier);//矿物贴图动画减少
-                        }
+                        costFrac += miningRate;
+                        flag = (int)costFrac > 0;
+                        costFrac -= (flag ? 1 : 0);
+                    }
+                    if (flag)
+                    {
+                        veinPool[veinIndex].amount -= ItemConfig.CollectorCfg.CollectorOilNum * Multiplier;//单个矿物总数-
+                        factory.veinGroups[(int)veinPool[veinIndex].groupIndex].amount -= ItemConfig.CollectorCfg.CollectorMineNum * Multiplier;//地表矿堆总数-
+                        factory.veinAnimPool[veinIndex].time = veinPool[veinIndex].amount >= 25000 ? 0.0f : (float)(1.0 - (double)veinPool[veinIndex].amount * (double)VeinData.oilSpeedMultiplier);//矿物贴图动画减少
                     }
                     return true;
                 }
                 else
                 {
-                    //已枯竭
+                    // 已枯竭
                     return false;
                 }
 
@@ -530,36 +544,39 @@ namespace ItemsManage
             {
                 if (veinPool[veinIndex].amount > 0)
                 {
-                    bool flag = true;
-                    //如果消耗率<1，计算本次采矿是否消耗的概率
-                    if ((double)miningCostRate < 0.999989986419678)
+                    // 把每次采矿的小数点累计起来，满1则扣除
+                    bool flag = false;
+                    if (miningRate > 0f)
                     {
-                        seed = (uint)((ulong)(seed % 2147483646U + 1U) * 48271UL % (ulong)int.MaxValue) - 1U;
-                        flag = (double)seed / 2147483646.0 < (double)miningCostRate;
+                        costFrac += miningRate;
+                        flag = (int)costFrac > 0;
+                        costFrac -= (flag ? 1 : 0);
                     }
+
                     if (flag)
                     {
                         veinPool[veinIndex].amount -= ItemConfig.CollectorCfg.CollectorMineNum * Multiplier;//单个矿物总数-
                         factory.veinGroups[(int)veinPool[veinIndex].groupIndex].amount -= ItemConfig.CollectorCfg.CollectorMineNum * Multiplier;//地表矿堆总数-
-                        factory.veinAnimPool[veinIndex].time = veinPool[veinIndex].amount >= 20000 ? 0.0f : (float)(1.0 - (double)veinPool[veinIndex].amount * 4.99999987368938E-05);
-
                         //如果矿物耗尽则删除矿堆
                         if (veinPool[veinIndex].amount <= 0)
                         {
+                            short groupIndex = veinPool[veinIndex].groupIndex;
+                            factory.veinGroups[groupIndex].count--;
                             factory.RemoveVeinWithComponents(veinIndex);
-                            factory.RecalculateVeinGroup(veinPool[veinIndex].groupIndex);
-                            //factory.NotifyVeinExhausted((int)veinPool[veinIndex].type, veinPool[veinIndex].pos);
-                            //factory.RecalculateVeinGroup((int)groupIndex);
+                            factory.RecalculateVeinGroup(groupIndex);
                         }
                     }
+
                     return true;
                 }
                 else
                 {
                     //如果矿物耗尽则删除矿堆
+
+                    short groupIndex = veinPool[veinIndex].groupIndex;
+                    factory.veinGroups[groupIndex].count--;
                     factory.RemoveVeinWithComponents(veinIndex);
-                    factory.RecalculateVeinGroup(veinPool[veinIndex].groupIndex);
-                    //factory.NotifyVeinExhausted((int)veinPool[veinIndex].type, veinPool[veinIndex].pos);
+                    factory.RecalculateVeinGroup(groupIndex);
                     return false;
                 }
 

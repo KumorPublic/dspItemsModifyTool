@@ -135,7 +135,7 @@ namespace CustomCreateBirthStar
                 __result.orbitScaler = 6.865142f;
                 __result.level = 0.9919679f;
                 __result.resourceCoef = 60.0f;
-                __result.name = "残破庇护所 B";
+                __result.name = "残破庇护所 β";
                 __result.safetyFactor = 0.09f;
                 Util.OutputStarData(__result);
             }
@@ -158,7 +158,7 @@ namespace CustomCreateBirthStar
                 __result.orbitScaler = 3.156503f;
                 __result.level = 0.9919679f;
                 __result.resourceCoef = 60.0f;
-                __result.name = "残破庇护所 A";
+                __result.name = "残破庇护所 α";
                 __result.safetyFactor = 0.89f;
                 Util.OutputStarData(__result);
 
@@ -742,23 +742,23 @@ namespace CustomCreateBirthStar
             }
             else if (star.id == STAR_ID_Custom1)
             {
-                //6, 19, 23，给沙漠星球增加风速特质
+                // 6, 19, 23，给沙漠星球增加风速特质
                 if(__result.theme == 6) // 干旱荒漠
                 {
                     //Util.Log("添加风速特质: id = " + star.id.ToString());
-                    __result.windStrength = 5.0f;
+                    __result.windStrength = 6.0f;
                     __result.luminosity = 2.0f;
 
                 }
                 else if(__result.theme == 19) // 三色荒漠
                 {
                     __result.windStrength = 9.8f;
-                    __result.luminosity = 3.0f;
+                    __result.luminosity = 1.5f;
 
                 }else if(__result.theme == 23) // 橙晶荒漠
                 {
-                    __result.windStrength = 7.0f;
-                    __result.luminosity = 4.0f;
+                    __result.windStrength = 4.0f;
+                    __result.luminosity = 5.5f;
                 }
                 //if (__result.windStrength >=1f)
                 //{
@@ -823,37 +823,38 @@ namespace CustomCreateBirthStar
                 isFirstPlant = __instance.planet.star.planets[0].id == __instance.planet.id ? true : false;
             }
 
-            
+            bool isUnlocked_古代技术_星际电力传输 = __instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_星际电力传输);
+            bool isUnlocked_古代技术_行星级无线输电 = __instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_星际电力传输);
+
+
 
             //0.010概率获得星际电力枢纽
             if (Random > 0.00001 && Random <= 0.01001)
             {
-                // 科技未解锁时才能挖到
-                if (__instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_星际电力传输) == false)
-                {
-                    ItemProtoID = ProtoID.物品.星际能量枢纽;
-                    ItemCount = isFirstPlant ? 5 : 1;
-                }
-                    
+                ItemProtoID = ProtoID.物品.星际能量枢纽;
+                ItemCount = isFirstPlant ? 3 : 1;
             }
+
             //0.008概率直接解锁蓝图
             else if (Random > 0.0100 && Random <= 0.0180)
             {
                 if (isFirstPlant)
                 {
-                    if (__instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_星际电力传输) == false)
+                    if (isUnlocked_古代技术_星际电力传输 == false)
                     {
+                        // 解锁科技并奖励10个成品
                         __instance.gameData.history.UnlockTech(ProtoID.Tech.古代技术_星际电力传输);
                         //Util.Log("解锁科技：" + LDB.techs.Select(ProtoID.Tech.古代技术_星际电力传输).name);
                         ItemProtoID = ProtoID.物品.星际能量枢纽;
                         ItemCount = 10;
                     }
-                    else if (__instance.gameData.history.TechUnlocked(ProtoID.Tech.古代技术_行星级无线输电) == false)
+                    else if (isUnlocked_古代技术_行星级无线输电 == false)
                     {
+                        // 解锁科技并奖励3个成品
                         __instance.gameData.history.UnlockTech(ProtoID.Tech.古代技术_行星级无线输电);
                         //Util.Log("解锁科技：" + LDB.techs.Select(ProtoID.Tech.古代技术_行星级无线输电).name);
                         ItemProtoID = ProtoID.物品.星际能量枢纽MK2;
-                        ItemCount = 5;
+                        ItemCount = 3;
                     }
                 }
             }
@@ -861,17 +862,23 @@ namespace CustomCreateBirthStar
             else if (Random > 0.201 && Random <= 0.211)
             {
                 ItemProtoID = ProtoID.物品.能量核心;
-                ItemCount = isFirstPlant ? 50 : 5;
+                ItemCount = isFirstPlant ? 10 : 5;
             }//0.02概率获得能量核心*2
             else if (Random > 0.211 && Random <= 0.231)
             {
                 ItemProtoID = ProtoID.物品.能量核心;
-                ItemCount = isFirstPlant ? 20 : 2;
+                ItemCount = isFirstPlant ? 5 : 2;
             }//0.04概率获得能量核心*1
             else if (Random > 0.231 && Random <= 0.271)
             {
                 ItemProtoID = ProtoID.物品.能量核心;
-                ItemCount = isFirstPlant ? 10 : 1;
+                ItemCount = isFirstPlant ? 2 : 1;
+            }
+            // 0.001概率获得能量枢纽MK2
+            else if (Random > 0.271 && Random <= 0.272)
+            {
+                ItemProtoID = ProtoID.物品.星际能量枢纽MK2;
+                ItemCount = isFirstPlant ? 2 : 1;
             }
 
             if (ItemProtoID < 1)
@@ -895,15 +902,15 @@ namespace CustomCreateBirthStar
             int package = GameMain.mainPlayer.TryAddItemToPackage(itemId, count, count, true);
             if (package < count)
             {
-                UIRealtimeTip.Popup("无法获得科技奖励".Translate());
+                UIRealtimeTip.Popup("无法获得物品".Translate());
                 //Util.Log("物品添加失败");
                 Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "无法获得科技奖励");
             }
             else
             {
                 UIItemup.Up(itemId, count);
-                UIRealtimeTip.Popup("?!!".Translate());
-                //Util.Log("添加物品至背包：" + itemId.ToString());
+                UIRealtimeTip.Popup("Lucky!!!".Translate());
+                // Util.Log("添加物品至背包：" + itemId.ToString());
                 Util.Log(MethodBase.GetCurrentMethod().DeclaringType.Name, MethodBase.GetCurrentMethod().Name, "添加物品至背包");
             }
             

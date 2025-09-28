@@ -44,12 +44,9 @@
 
         public class ModifyCfg
         {
-            public class TankStorage
+            public class 储液罐
             {
-                ///<summary>
-                ///储液罐容量
-                ///</summary>
-                public const int fluidStorageCount = 50000;
+                public const int 容量 = 50000;
             }
 
             public class WarpStorage
@@ -58,6 +55,11 @@
                 ///机甲翘曲器堆叠
                 ///</summary>
                 public const int StackSize = 500;
+            }
+
+            public class 充电塔
+            {
+                public const int 链接距离 = 120;
             }
         }
 

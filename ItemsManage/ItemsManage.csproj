@@ -72,18 +72,27 @@
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.PhysicsModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>D:\Program Files (x86)\Steam\steamapps\common\Dyson Sphere Program\DSPGAME_Data\Managed\UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InterstellarLogisticsTower.cs" />
     <Compile Include="ItemConfig.cs" />
     <Compile Include="ItemModify.cs" />
     <Compile Include="ItemManagePlugin.cs" />
     <Compile Include="ItemCollector.cs" />
     <Compile Include="ItemsProto.cs" />
+    <Compile Include="NoAbnormalLogic.cs" />
+    <Compile Include="PlayerControllerGlobeMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ShowMe.cs" />
+    <Compile Include="Trash2Sand.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

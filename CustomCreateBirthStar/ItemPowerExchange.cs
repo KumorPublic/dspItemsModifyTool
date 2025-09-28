@@ -146,7 +146,7 @@ namespace CustomCreateBirthStar
             NewModel.prefabDesc.fullId = ProtoID.物品.能量核心满;//燃料id
             NewModel.prefabDesc.emptyId = ProtoID.物品.能量核心;//燃料产物id
             NewModel.prefabDesc.powerCoverRadius = 460f;//修改半径
-            NewModel.prefabDesc.powerConnectDistance = 80f;// 链接距离
+            //NewModel.prefabDesc.powerConnectDistance = 80f;// 链接距离
             NewModel.prefabDesc.isPowerNode = true;
 
             // 没有效果
