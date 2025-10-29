@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CloseDraw", "CloseDraw\CloseDraw.csproj", "{CD304E33-49AB-4847-A810-4D48CF0245EF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomCreateBirthStar", "CustomCreateBirthStar\CustomCreateBirthStar.csproj", "{EB70A84A-AEBB-48E9-849F-0254338582C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AutoBuild", "AutoBuild\AutoBuild.csproj", "{0016F6A3-3DDF-41DA-A27F-5D2E6B859435}"
@@ -17,10 +15,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD304E33-49AB-4847-A810-4D48CF0245EF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EB70A84A-AEBB-48E9-849F-0254338582C0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EB70A84A-AEBB-48E9-849F-0254338582C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB70A84A-AEBB-48E9-849F-0254338582C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
